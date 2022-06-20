@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>barren-tools</artifactId>
+        <groupId>org.barren</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>barren-starter-oss</artifactId>
+
+    <description>oss对象存储服务，集成了四种oss，分别为：阿里云oss、七牛oss、腾讯oss、minio</description>
+
+    <properties>
+        <aliyun-sdk-oss.version>3.11.3</aliyun-sdk-oss.version>
+        <qiniu-java-sdk.version>7.9.3</qiniu-java-sdk.version>
+        <qcloud-cos_api.version>5.6.36</qcloud-cos_api.version>
+        <minio.version>8.3.7</minio.version>
+        <huaweicloud.esdk.version>3.19.7</huaweicloud.esdk.version>
+
+    </properties>
+
+    <dependencies>
+
+        <!--AliOss-->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>${aliyun-sdk-oss.version}</version>
+        </dependency>
+
+        <!--QiNiu-->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>${qiniu-java-sdk.version}</version>
+        </dependency>
+
+        <!--腾讯COS-->
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos_api</artifactId>
+            <version>${qcloud-cos_api.version}</version>
+        </dependency>
+        <!--MinIO-->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
+        </dependency>
+        <!--华为云Obs-->
+        <dependency>
+            <groupId>com.huaweicloud</groupId>
+            <artifactId>esdk-obs-java</artifactId>
+            <version>${huaweicloud.esdk.version}</version>
+        </dependency>
+
+    </dependencies>
+</project>

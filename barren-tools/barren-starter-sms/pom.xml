@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>barren-tools</artifactId>
+        <groupId>org.barren</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>barren-starter-sms</artifactId>
+    <description>短信服务，集成了四种sms，分别为：阿里云sms、七牛sms、腾讯sms、云片sms</description>
+
+    <properties>
+        <aliyun-java-sdk.version>4.6.0</aliyun-java-sdk.version>
+        <qcloudsms.version>1.0.6</qcloudsms.version>
+        <qiniu-java-sdk.version>7.4.0</qiniu-java-sdk.version>
+
+    </properties>
+
+    <dependencies>
+
+        <!--阿里Sms-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>${aliyun-java-sdk.version}</version>
+        </dependency>
+
+        <!--腾讯SMS-->
+        <dependency>
+            <groupId>com.github.qcloudsms</groupId>
+            <artifactId>qcloudsms</artifactId>
+            <version>${qcloudsms.version}</version>
+        </dependency>
+
+        <!--七牛sms-->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>${qiniu-java-sdk.version}</version>
+        </dependency>
+
+        <!--云片sms-->
+        <!--<dependency>
+            <groupId>com.yunpian.sdk</groupId>
+            <artifactId>yunpian-java-sdk</artifactId>
+            <version>1.2.7</version>
+        </dependency>-->
+
+    </dependencies>
+
+</project>

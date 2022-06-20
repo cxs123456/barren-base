@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.barren.tools.sms.config.SmsConfiguration,\
+  org.barren.tools.sms.config.TencentSmsConfiguration,\
+  org.barren.tools.sms.config.QiniuSmsConfiguration,\
+  org.barren.tools.sms.config.AliSmsConfiguration,\
+  org.barren.tools.sms.config.YunpianSmsConfiguration

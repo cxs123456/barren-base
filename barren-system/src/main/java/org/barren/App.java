@@ -1,0 +1,61 @@
+package org.barren;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.barren.core.auth.utils.AuthUtil;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
+
+// import org.barren.core.auth.utils.AuthUtil;
+
+/**
+ * note:
+ *
+ * @author cxs
+ **/
+@EnableScheduling
+@EnableAsync
+@SpringBootApplication
+@RestController
+@RequestMapping("/demo")
+@Slf4j
+@Api(tags = "demo")
+public class App {
+
+    public static void main(String[] args) {
+        SpringApplication.run(App.class, args);
+    }
+
+    @Bean(name = "restTemplate")
+    public RestTemplate restTemplate() {
+
+        return new RestTemplate();
+    }
+
+    @ApiOperation(value = "hello", notes = "hello")
+    @GetMapping("/hello")
+    public String hello(@RequestHeader("Authorization") String token) {
+        String atoken = token.split(" ")[1];
+        Map<String, String> map = AuthUtil.decode(atoken);
+        log.info("token json = {}", map);
+
+        Map<String, String> userInfo = AuthUtil.getUserInfo();
+        return "hello serviceA AAA, you token = " + token + "\n" + userInfo;
+    }
+
+    @GetMapping("/anyone")
+    public String anyone() {
+        return "hello anyone, you need't token";
+    }
+}

@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.barren.core.auth.config.AuthServerConfig,\
+  org.barren.core.auth.config.ResourceServerConfig,\
+  org.barren.core.auth.config.WebSecurityConfig

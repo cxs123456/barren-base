@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.barren</groupId>
+        <artifactId>barren-base</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>barren-core</artifactId>
+
+    <modules>
+        <module>barren-common</module>
+        <module>barren-starter-redis</module>
+        <module>barren-starter-auth</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <name>barren-core</name>
+    <description>系统核心功能，auth认证、log日志、common开发工具包utils、web相关(错误码国际化/全局异常)、redis、UReport2、Excel、httpclient</description>
+
+</project>
