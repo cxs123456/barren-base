@@ -1,5 +1,7 @@
 package org.barren.core.tool.config;
 
+import org.barren.core.tool.util.SpringContextHolder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -7,4 +9,10 @@ import org.springframework.context.annotation.Configuration;
  **/
 @Configuration
 public class ToolConfiguration {
+
+    @Bean
+    public SpringContextHolder springContextHolder() {
+        return new SpringContextHolder();
+    }
+
 }

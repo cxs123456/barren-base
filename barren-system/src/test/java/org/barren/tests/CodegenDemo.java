@@ -14,19 +14,19 @@ import java.util.Collections;
 public class CodegenDemo {
 
     public static void main(String[] args) {
-        String url = "jdbc:log4jdbc:mysql://localhost:3306/barren?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false";
+        String url = "jdbc:mysql://localhost:3306/barren?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false";
         String username = "root";
         String password = "123456";
         String modulePath = "/barren-system";
 
         String projectPath = System.getProperty("user.dir") + modulePath;
         System.out.println("projectPath = " + projectPath);
-        String outputDir = projectPath + "/src/test/java";
-        String mapperOutputDir = projectPath + "/src/test/resources/mapper/";
+        String outputDir = projectPath + "/src/main/java";
+        String mapperOutputDir = projectPath + "/src/main/resources/mapper/";
 
-        String[] tables = {"marriott_job", "marriott_order", "marriott_res_config"};
+        String[] tables = {"sys_user", "sys_role", "sys_menu","sys_user_role", "sys_role_menu"};
         String packageName = "org.barren.modules";
-        String moduleName = "demo";
+        String moduleName = "system";
 
         FastAutoGenerator.create(url, username, password)
                 .globalConfig(builder -> {

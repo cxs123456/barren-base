@@ -196,6 +196,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
             map.put("nickname", userJwt.getNickname());
             map.put("id", userJwt.getId());
             map.put("phone", userJwt.getPhone());
+            map.put("roles", userJwt.getRoles());
             map.put("ok", true);
             token.setAdditionalInformation(map);
             return token;
@@ -210,6 +211,10 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
         return defaultTokenServices;
     }
 
+    /**
+     * 获取jwt中的用户信息工具类
+     * @return
+     */
     @Bean
     public AuthUtil authUtil() {
         AuthUtil authUtil = new AuthUtil(properties.getSecretKey());

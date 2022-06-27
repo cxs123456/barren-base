@@ -13,7 +13,11 @@
     <description>SpringSecurity + OAuth2 + JWT 实现服务认证鉴权</description>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.barren</groupId>
+            <artifactId>barren-common</artifactId>
+        </dependency>
+        <!-- 旧的OAuth2依赖，如有需要变更成新的：spring-security-oauth2-authorization-server-->
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>

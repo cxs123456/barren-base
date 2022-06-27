@@ -78,6 +78,12 @@
 
             <dependency>
                 <groupId>org.barren</groupId>
+                <artifactId>barren-generator</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.barren</groupId>
                 <artifactId>barren-starter-auth</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -177,6 +183,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- SpringBoot 热部署组件 -->
+        <!--<dependency>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-devtools</artifactId>-->
+        <!--</dependency>-->
+
         <!-- spring boot 缓存 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -200,10 +212,6 @@
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
         </dependency>-->
 
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-generator</artifactId>
-        </dependency>
 
         <!--Mysql依赖包-->
         <dependency>
@@ -344,6 +352,14 @@
             <artifactId>guava</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>23.0.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -351,6 +367,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                </configuration>
             </plugin>
         </plugins>
     </build>

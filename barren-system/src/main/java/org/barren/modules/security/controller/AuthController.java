@@ -1,6 +1,7 @@
 package org.barren.modules.security.controller;
 
 import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.wf.captcha.ArithmeticCaptcha;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.barren.core.auth.properties.AuthProperties;
+import org.barren.core.auth.utils.AuthUtil;
 import org.barren.core.tool.http.R;
 import org.barren.modules.security.entity.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,17 +55,16 @@ public class AuthController {
 
     @ApiOperation("登录授权")
     @RequestMapping(value = "/login", method = {RequestMethod.POST})
-    public R<Object> login(LoginRequest loginRequest) {
+    public R<Object> login(@RequestBody LoginRequest loginRequest) {
         String codeKey = loginRequest.getCodeKey();
-        String num = loginRequest.getNum();
-        String val = redisTemplate.opsForValue().get(codeKey);
-        if (StringUtils.isBlank(val)) {
-            return R.fail("验证码不存在或已过期");
-        }
-        if (StringUtils.isBlank(num) || !val.equals(num)) {
+        String code = loginRequest.getCode();
+        if (StringUtils.isAnyBlank(code, codeKey)) {
             return R.fail("验证码错误");
         }
-
+        String val = redisTemplate.opsForValue().get(codeKey);
+        if (StringUtils.isBlank(val) || !val.equals(code)) {
+            return R.fail("验证码错误");
+        }
         String username = loginRequest.getUsername();
         // todo 这里密码需要前后端 RSA加密传输
         String password = loginRequest.getPassword();
@@ -90,7 +90,7 @@ public class AuthController {
             // request.getRequestDispatcher("/oauth/token").forward(request, response);
         } catch (Exception e) {
             log.error(" login error: ", e);
-            return R.fail(null, e.getMessage());
+            return R.fail(401, e.getMessage());
         }
         return R.ok(response.getBody());
     }
@@ -116,11 +116,16 @@ public class AuthController {
         return R.ok(imgResult);
     }
 
-    // @ApiOperation("获取用户信息")
-    // @GetMapping(value = "/info")
-    // public R<Object> getUserInfo() {
-    //     return ResponseEntity.ok(SecurityUtils.getCurrentUser());
-    // }
+    @ApiOperation("获取用户信息")
+    @GetMapping(value = "/info")
+    public R<JSONObject> getUserInfo() {
+        // 获取用户认证信息 org.springframework.security.core.userdetails.UserDetails
+        // UserJwt user = (UserJwt) (SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        SecurityContextHolder.getContext().getAuthentication();
+        JSONObject userInfo = AuthUtil.getUserInfo();
+
+        return R.ok(userInfo);
+    }
 
     /**
      * 请求头的信息处理

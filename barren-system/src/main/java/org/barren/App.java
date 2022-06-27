@@ -1,9 +1,11 @@
 package org.barren;
 
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.barren.core.auth.utils.AuthUtil;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
-
 // import org.barren.core.auth.utils.AuthUtil;
 
 /**
@@ -27,6 +27,7 @@ import java.util.Map;
 @EnableScheduling
 @EnableAsync
 @SpringBootApplication
+@MapperScan("org.barren.**.mapper")
 @RestController
 @RequestMapping("/demo")
 @Slf4j
@@ -47,10 +48,10 @@ public class App {
     @GetMapping("/hello")
     public String hello(@RequestHeader("Authorization") String token) {
         String atoken = token.split(" ")[1];
-        Map<String, String> map = AuthUtil.decode(atoken);
-        log.info("token json = {}", map);
+        JSONObject decode = AuthUtil.decode(atoken);
+        log.info("token json = {}", decode);
 
-        Map<String, String> userInfo = AuthUtil.getUserInfo();
+        JSONObject userInfo = AuthUtil.getUserInfo();
         return "hello serviceA AAA, you token = " + token + "\n" + userInfo;
     }
 

@@ -71,6 +71,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * @param http
      * @throws Exception
      */
+    // 如果ResourceServerConfig.configure(HttpSecurity)方法配置了，下面就可以不用配置注释掉
     @Override
     public void configure(HttpSecurity http) throws Exception {
         // 此处不要禁止formLogin,code模式测试需要开启表单登陆,

@@ -41,6 +41,7 @@ public class DemoTests {
         Assertions.assertThat(requestResult).contains("Hello, spring");
     }
 
+
     public static void main(String[] args) throws FileNotFoundException {
 
         // 算术类型

@@ -1,6 +1,7 @@
 package org.barren.core.auth.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
@@ -8,7 +9,6 @@ import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.MacSigner;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -31,18 +31,27 @@ public class AuthUtil {
         return AuthUtil.key;
     }
 
+    /**
+     * 获取当前登录的用户信息
+     *
+     * @return UserInfo
+     */
+    public static UserInfo getCurrentUser() {
+        return getUserInfo().toJavaObject(UserInfo.class);
+    }
+
     /***
-     * 获取用户信息
+     * 获取token中的用户信息json形式
      * @return
      */
-    public static Map<String, String> getUserInfo() {
+    public static JSONObject getUserInfo() {
         //获取授权信息
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
         //令牌解码
         return decode(details.getTokenValue());
     }
 
-    public static Map<String, String> decode(String token) {
+    public static JSONObject decode(String token) {
         return decode(token, AuthUtil.key);
     }
 
@@ -52,13 +61,13 @@ public class AuthUtil {
      * @param key 秘钥，默认对称加密算法秘钥
      * @return
      */
-    public static Map<String, String> decode(String token, String key) {
+    public static JSONObject decode(String token, String key) {
         Objects.requireNonNull(key);
         //校验Jwt
         Jwt jwt = JwtHelper.decodeAndVerify(token, new MacSigner(key));
         //获取Jwt原始内容
         String claims = jwt.getClaims();
-        return JSON.parseObject(claims, Map.class);
+        return JSON.parseObject(claims);
     }
 
 }

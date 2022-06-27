@@ -20,6 +20,11 @@
 
         <dependency>
             <groupId>org.barren</groupId>
+            <artifactId>barren-generator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.barren</groupId>
             <artifactId>barren-starter-auth</artifactId>
         </dependency>
 

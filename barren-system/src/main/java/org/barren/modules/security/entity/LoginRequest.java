@@ -20,8 +20,8 @@ public class LoginRequest implements Serializable {
     @ApiModelProperty(value = "密码")
     private String password;
 
-    @ApiModelProperty(value = "计算值")
-    private String num;
+    @ApiModelProperty(value = "图片验证码，计算值")
+    private String code;
 
     @NotBlank
     @ApiModelProperty(value = "验证码key")
