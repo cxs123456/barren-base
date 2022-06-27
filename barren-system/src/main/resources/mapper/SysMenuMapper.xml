@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.barren.modules.system.mapper.SysMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.barren.modules.system.entity.SysMenu">
+        <id column="id" property="id" />
+        <result column="pid" property="pid" />
+        <result column="name" property="name" />
+        <result column="sort" property="sort" />
+        <result column="type" property="type" />
+        <result column="path" property="path" />
+        <result column="component" property="component" />
+        <result column="permission" property="permission" />
+        <result column="icon" property="icon" />
+        <result column="i_frame" property="iFrame" />
+        <result column="cache" property="cache" />
+        <result column="hidden" property="hidden" />
+        <result column="create_user" property="createUser" />
+        <result column="update_user" property="updateUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="del_flag" property="delFlag" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, pid, name, sort, type, path, component, permission, icon, i_frame, cache, hidden, create_user, update_user, create_time, update_time, del_flag, remark
+    </sql>
+
+</mapper>
