@@ -56,6 +56,7 @@ mybatis-plus:
       logic-delete-value: 1
       # 逻辑未删除全局值（0表示未删除，这也是Mybatis Plus的默认配置）
       logic-not-delete-value: 0
+      logic-delete-field: delFlag
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
