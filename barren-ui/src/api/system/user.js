@@ -1,61 +1,68 @@
 import request from '@/utils/request'
-import { encrypt } from '@/utils/jsencrypt'
 
+/**
+* 通过id查询详情
+*
+* @param id
+*/
+export function detail(id) {
+  return request({
+    url: '/system/sysUser/detail',
+    method: 'get',
+    params: id
+  })
+}
+
+/**
+* 分页查询
+*
+* @param current
+* @param size
+* @param params
+*/
+export function getList(data) {
+  return request({
+    url: '/system/sysUser/page',
+    method: 'get',
+    params: data
+  })
+}
+
+/**
+* 新增
+*
+* @param data
+*/
 export function add(data) {
   return request({
-    url: 'api/users',
+    url: '/system/sysUser/save',
     method: 'post',
     data
   })
 }
 
+/**
+* 通过id修改
+*
+* @param data
+*/
+export function update(data) {
+  return request({
+    url: '/system/sysUser/update',
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+* 通过ids删除
+*
+* @param ids
+*/
 export function del(ids) {
   return request({
-    url: 'api/users',
-    method: 'delete',
+    url: '/system/sysUser/delete',
+    method: 'post',
     data: ids
   })
 }
-
-export function edit(data) {
-  return request({
-    url: 'api/users',
-    method: 'put',
-    data
-  })
-}
-
-export function editUser(data) {
-  return request({
-    url: 'api/users/center',
-    method: 'put',
-    data
-  })
-}
-
-export function updatePass(user) {
-  const data = {
-    oldPass: encrypt(user.oldPass),
-    newPass: encrypt(user.newPass)
-  }
-  return request({
-    url: 'api/users/updatePass/',
-    method: 'post',
-    data
-  })
-}
-
-export function updateEmail(form) {
-  const data = {
-    password: encrypt(form.pass),
-    email: form.email
-  }
-  return request({
-    url: 'api/users/updateEmail/' + form.code,
-    method: 'post',
-    data
-  })
-}
-
-export default { add, edit, del }
-
