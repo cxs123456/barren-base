@@ -3,6 +3,7 @@ package org.barren.generator.engine;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -18,7 +19,9 @@ public class EnhanceFreemarkerTemplateEngine extends FreemarkerTemplateEngine {
         String entityName = tableInfo.getEntityName();
         String otherPath = this.getPathInfo(OutputFile.other);
         customFile.forEach((key, value) -> {
-            String fileName = String.format(otherPath + File.separator + entityName + "%s", key);
+            // 获取后缀
+            String suffix = StringUtils.substringAfterLast(key, '.');
+            String fileName = String.format(otherPath + File.separator + StringUtils.uncapitalize(entityName) + ".%s", suffix);
             this.outputFile(new File(fileName), objectMap, value);
         });
     }

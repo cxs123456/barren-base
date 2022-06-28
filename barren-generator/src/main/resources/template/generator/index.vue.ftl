@@ -18,10 +18,10 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { getList, update, add, del } from "@/api/${package.ModuleName}/${table.entityPath}"
+    import {mapGetters} from "vuex";
+    import {add, del, getList, update} from "@/api/"
 
-export default {
+    export default {
   name: "${entity}",
   data () {
     return {

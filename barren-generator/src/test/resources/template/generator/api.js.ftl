@@ -1,5 +1,10 @@
 import request from '@/utils/request'
 
+/**
+* 通过id查询详情
+*
+* @param id
+*/
 export function detail(id) {
   return request({
     url: '/${package.ModuleName}/${table.entityPath}/detail',
@@ -8,19 +13,27 @@ export function detail(id) {
   })
 }
 
-export function page(current, size, params) {
+/**
+* 分页查询
+*
+* @param current
+* @param size
+* @param params
+*/
+export function getList(data) {
   return request({
     url: '/${package.ModuleName}/${table.entityPath}/page',
     method: 'get',
-    params: {
-      ...params,
-      current,
-      size,
-    }
+    params: data
   })
 }
 
-export function save(data) {
+/**
+* 新增
+*
+* @param data
+*/
+export function add(data) {
   return request({
     url: '/${package.ModuleName}/${table.entityPath}/save',
     method: 'post',
@@ -28,6 +41,11 @@ export function save(data) {
   })
 }
 
+/**
+* 通过id修改
+*
+* @param data
+*/
 export function update(data) {
   return request({
     url: '/${package.ModuleName}/${table.entityPath}/update',
@@ -36,6 +54,11 @@ export function update(data) {
   })
 }
 
+/**
+* 通过ids删除
+*
+* @param ids
+*/
 export function del(ids) {
   return request({
     url: '/${package.ModuleName}/${table.entityPath}/delete',
