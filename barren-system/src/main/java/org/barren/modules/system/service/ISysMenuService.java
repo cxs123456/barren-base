@@ -81,7 +81,7 @@ public interface ISysMenuService extends IService<SysMenu> {
                         menuVo.setMeta(new MenuMetaVo(menu.getTitle(), menu.getIcon(), !menu.getCache()));
                         if (CollectionUtil.isNotEmpty(menuDtoList)) {
                             menuVo.setAlwaysShow(true);
-                            menuVo.setRedirect("noredirect");
+                            menuVo.setRedirect("noRedirect");
                             menuVo.setChildren(buildMenus(menuDtoList));
 
                         } else if (menu.getPid() == null) { // 处理是一级菜单并且没有子菜单的情况
