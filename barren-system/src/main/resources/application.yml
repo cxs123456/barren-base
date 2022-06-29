@@ -8,6 +8,10 @@ spring:
     active: dev
   jackson:
     time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss # 全局设置@JsonFormat的格式pattern
+    default-property-inclusion: non_null
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
 
   main:
     allow-circular-references: true # 允许循环依赖，因为项目是三层架构，无法避免这个情况。
