@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -26,6 +27,10 @@ import java.time.LocalDateTime;
 public class SysMenu implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @ApiModelProperty("子菜单列表，非数据库字段")
+    @TableField(exist = false)
+    private List<SysMenu> children;
 
     @ApiModelProperty("ID")
     @TableId(value = "id", type = IdType.AUTO)

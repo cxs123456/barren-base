@@ -53,6 +53,7 @@ mybatis-plus:
       insert-strategy: not_null
       update-strategy: not_null
       select-strategy: not_empty
+      where-strategy: not_null
       #驼峰下划线转换
       table-underline: true
       # 逻辑删除配置
@@ -61,6 +62,7 @@ mybatis-plus:
       # 逻辑未删除全局值（0表示未删除，这也是Mybatis Plus的默认配置）
       logic-not-delete-value: 0
       logic-delete-field: delFlag
+
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false

@@ -45,10 +45,15 @@ public class MybatisPlusConfig {
             UserInfo user = AuthUtil.getCurrentUser();
             Long userId = user.getId();
             //log.info("start insert fill ....");
-            this.strictInsertFill(metaObject, "createTime", () -> LocalDateTime.now(), LocalDateTime.class);
-            this.strictInsertFill(metaObject, "updateTime", () -> LocalDateTime.now(), LocalDateTime.class);
-            this.strictInsertFill(metaObject, "createUser", () -> userId, Long.class);
-            this.strictInsertFill(metaObject, "updateUser", () -> userId, Long.class);
+            // 数据库表设计 createTime，updateTime 已经设置成了自动插入当前时间和更新当前时间
+            // this.strictInsertFill(metaObject, "createTime", () -> LocalDateTime.now(), LocalDateTime.class);
+            // this.strictInsertFill(metaObject, "updateTime", () -> LocalDateTime.now(), LocalDateTime.class);
+            // this.strictInsertFill(metaObject, "createUser", () -> userId, Long.class);
+            // this.strictInsertFill(metaObject, "updateUser", () -> userId, Long.class);
+            metaObject.setValue("createTime", LocalDateTime.now());
+            metaObject.setValue("updateTime", LocalDateTime.now());
+            metaObject.setValue("createUser", userId);
+            metaObject.setValue("updateUser", userId);
         }
 
         @Override
@@ -56,8 +61,11 @@ public class MybatisPlusConfig {
             UserInfo user = AuthUtil.getCurrentUser();
             Long userId = user.getId();
             //log.info("start update fill ....");
-            this.strictUpdateFill(metaObject, "updateTime", () -> LocalDateTime.now(), LocalDateTime.class); // 起始版本 3.3.3(推荐)
-            this.strictUpdateFill(metaObject, "updateUser", () -> userId, Long.class); // 起始版本 3.3.3(推荐)
+            // 数据库表设计 updateTime 已经设置成了自动更新当前时间
+            // this.strictUpdateFill(metaObject, "updateTime", () -> LocalDateTime.now(), LocalDateTime.class); // 起始版本 3.3.3(推荐)
+            // this.strictUpdateFill(metaObject, "updateUser", () -> userId, Long.class); // 起始版本 3.3.3(推荐)
+            metaObject.setValue("updateTime", LocalDateTime.now());
+            metaObject.setValue("updateUser", userId);
         }
     }
 }

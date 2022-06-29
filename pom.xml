@@ -36,6 +36,8 @@
         <spring.platform.version>Cairo-SR8</spring.platform.version>
 
         <mybatis-plus.version>3.5.1</mybatis-plus.version>
+        <mybatis-plus-generator.version>3.5.1</mybatis-plus-generator.version>
+        <mybatis-plus-dynamic-datasource.version>3.5.1</mybatis-plus-dynamic-datasource.version>
 
         <druid.version>1.2.11</druid.version>
         <log4jdbc.version>1.16</log4jdbc.version>
@@ -121,12 +123,12 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-generator</artifactId>
-                <version>${mybatis-plus.version}</version>
+                <version>${mybatis-plus-generator.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
+                <version>${mybatis-plus-dynamic-datasource.version}</version>
             </dependency>
 
             <!-- easyexcel -->

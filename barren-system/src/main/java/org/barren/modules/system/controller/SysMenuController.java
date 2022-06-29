@@ -4,7 +4,9 @@ package org.barren.modules.system.controller;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNodeConfig;
 import cn.hutool.core.lang.tree.TreeUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +24,7 @@ import org.barren.modules.system.service.ISysRoleService;
 import org.barren.modules.system.service.ISysUserRoleService;
 import org.barren.modules.system.vo.MenuMetaVo;
 import org.barren.modules.system.vo.MenuVo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,6 +74,58 @@ public class SysMenuController {
         List<SysMenu> menuTrees = ISysMenuService.buildTree(menuList);
         List<MenuVo> menuVos = ISysMenuService.buildMenus(menuTrees);
         return R.ok(menuVos);
+    }
+
+    @GetMapping("treeList")
+    @ApiOperation(value = "查询菜单数据的tree列表", notes = "查询菜单数据的tree列表")
+    public R<List<SysMenu>> treeList(SysMenu query) {
+        LambdaQueryWrapper<SysMenu> wrapper;
+        if (StringUtils.isNotBlank(query.getTitle())) {
+            wrapper = Wrappers.<SysMenu>lambdaQuery().like(SysMenu::getTitle, query.getTitle());
+        } else {
+            wrapper = null;
+        }
+        List<SysMenu> menuList = menuService.list(wrapper);
+        if (CollectionUtils.isEmpty(menuList)) {
+            return R.ok();
+        }
+        List<SysMenu> menuTrees = ISysMenuService.buildTree(menuList);
+        return R.ok(menuTrees);
+    }
+
+
+    @GetMapping("detail")
+    @ApiOperation(value = "通过id查询详情", notes = "通过id查询详情")
+    public R<SysMenu> detail(@RequestParam Long id) {
+        SysMenu result = menuService.getById(id);
+        return R.ok(result);
+    }
+
+    @GetMapping("page")
+    @ApiOperation(value = "分页查询", notes = "分页查询")
+    public R<Page<SysMenu>> page(Page page, SysMenu query) {
+        return R.ok(menuService.page(page, Wrappers.query(query)));
+    }
+
+    @PostMapping("save")
+    @ApiOperation(value = "新增", notes = "新增")
+    public R save(@RequestBody SysMenu param) {
+        menuService.save(param);
+        return R.ok();
+    }
+
+    @PostMapping("update")
+    @ApiOperation(value = "修改", notes = "通过id修改")
+    public R update(@RequestBody SysMenu param) {
+        menuService.updateById(param);
+        return R.ok();
+    }
+
+    @PostMapping("delete")
+    @ApiOperation(value = "删除", notes = "通过ids删除")
+    public R delete(@RequestBody List<Long> idList) {
+        menuService.removeByIds(idList);
+        return R.ok();
     }
 
     /**
