@@ -1,8 +1,10 @@
 package org.barren.test;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.TemplateConfig;
+import com.baomidou.mybatisplus.generator.fill.Property;
 import org.barren.generator.engine.EnhanceFreemarkerTemplateEngine;
 
 import java.util.HashMap;
@@ -30,13 +32,13 @@ public class CodeGeneratorDemo {
         String outputDir = projectPath + "/src/test/java";
         String mapperOutputDir = projectPath + "/src/test/resources/mapper/";
 
-        String[] tables = {"sys_user"};
+        String[] tables = {"sys_user", "sys_role", "sys_menu","sys_user_role", "sys_role_menu"};
         String packageName = "org.barren.modules";
         String moduleName = "system";
 
         // 生成前端文件的包名，输出目录
         // String webDir = "api";
-        String webPath = projectPath + "/src/test/resources/ui/"+moduleName;
+        String webPath = projectPath + "/src/test/resources/ui/" + moduleName;
         // 配置xml，other文件的输出路径
         Map<OutputFile, String> pathInfo = new HashMap<>(4);
         pathInfo.put(OutputFile.mapperXml, mapperOutputDir);
@@ -65,7 +67,14 @@ public class CodeGeneratorDemo {
                             .addTablePrefix("t_", "c_") // 设置过滤表前缀
                             .mapperBuilder().enableBaseColumnList().enableBaseResultMap()
                             .controllerBuilder().enableRestStyle()
-                            .entityBuilder().enableLombok().enableTableFieldAnnotation().enableChainModel();
+                            .entityBuilder()
+                            // .addSuperEntityColumns("createUser", "updateUser", "createTime", "updateTime").superClass() // 设置基类
+                            // 设置属性填充
+                            .addTableFills(new Property("createUser", FieldFill.INSERT),
+                                    new Property("updateUser", FieldFill.INSERT_UPDATE),
+                                    new Property("createTime", FieldFill.INSERT),
+                                    new Property("updateTime", FieldFill.INSERT_UPDATE))
+                            .enableLombok().enableTableFieldAnnotation().enableChainModel();
                 })
                 .templateEngine(new EnhanceFreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                 .templateConfig(builder ->

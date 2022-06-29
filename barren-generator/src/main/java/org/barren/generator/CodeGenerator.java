@@ -1,7 +1,9 @@
 package org.barren.generator;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
+import com.baomidou.mybatisplus.generator.fill.Property;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -72,7 +74,14 @@ public class CodeGenerator {
                             .addTablePrefix(tablePrefix) // 设置过滤表前缀
                             .mapperBuilder().enableBaseColumnList().enableBaseResultMap()
                             .controllerBuilder().enableRestStyle()
-                            .entityBuilder().enableLombok().enableTableFieldAnnotation().enableChainModel();
+                            .entityBuilder()
+                            // .addSuperEntityColumns("createUser", "updateUser", "createTime", "updateTime").superClass() // 设置基类
+                            // 设置属性填充
+                            .addTableFills(new Property("createUser", FieldFill.INSERT),
+                                    new Property("updateUser", FieldFill.INSERT_UPDATE),
+                                    new Property("createTime", FieldFill.INSERT),
+                                    new Property("updateTime", FieldFill.INSERT_UPDATE))
+                            .enableLombok().enableTableFieldAnnotation().enableChainModel();
                 })
                 .templateEngine(new EnhanceFreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                 .templateConfig(builder ->
