@@ -19,12 +19,11 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
-  import {add, del, getList, update} from '@/api/system/user'
-  import { parseTime, formatTime } from '@/utils'
+  import {mapGetters} from "vuex";
+  import {add, del, getList, update} from "@/api/system/sysRole"
 
   export default {
-    name: 'User',
+    name: "SysRole",
     data() {
       return {
         page: {},
@@ -50,81 +49,66 @@
           excelBtn: true, // 导出按钮
           column: [
             {
-              label: '用户名',
-              prop: 'username',
+              label: "角色名称",
+              prop: "name",
               search: true,
               rules: [{
                 required: true,
-                message: '请输入必选项的值',
-                trigger: 'blur'
+                message: "请输入必填项的值",
+                trigger: "blur"
               }]
             },
             {
-              label: '昵称',
-              prop: 'nickName',
-              search: true,
-              html: true,
-              formatter: (row) => {
-                return '<b style="color:red">' + row.nickName + '</b>'
-              },
-              rules: [{
-                required: true,
-                message: '请输入必选项的值',
-                trigger: 'blur'
-              }]
-            },
-            {
-              label: '手机号',
-              prop: 'phone',
+              label: "角色编码",
+              prop: "code",
               search: true,
               rules: [{
+                type: 'string',
                 required: true,
-                message: '请输入必选项的值',
-                trigger: 'blur'
+                message: "请输入必填项的值",
+                trigger: "blur"
+              }, {
+                type: 'string',
+                required: true,
+                message: "使用数字和字母的组合",
+                pattern: /^[0-9A-Za-z]+$/,
+                trigger: "blur"
+              }, {
+                type: 'string',
+                required: true,
+                message: "字符长度限制4-10位",
+                min: 4,
+                max: 10,
+                trigger: "blur"
               }]
             },
             {
-              label: '邮箱',
-              prop: 'email',
-              overHidden: true,
-              search: true,
-              rules: [{
-                required: true,
-                message: '请输入必选项的值',
-                trigger: 'blur'
-              }]
-            },
-            {
-              label: '性别',
-              prop: 'sex',
-              value: 1, // 设置默认值
-              type: 'radio',
-              dicData: [{label: '男', value: 1}, {label: '女', value: 2}]
-
-            },
-            {
-              label: '状态',
-              prop: 'status',
+              label: "角色级别",
+              prop: "level",
               value: 1,
-              type: 'switch',
-              props: {
-                label: 'name',
-                value: 'code'
-              },
-              dicData: [{name: '启用', code: 1}, {name: '禁用', code: 0}],
-              html: true,
-              formatter: (row, value, label) => {
-                return '<b style="color:red">' + label + '</b>'
-              }
+              type: 'number',
+              disable: true
             },
             {
-              label: '创建时间',
-              prop: 'createTime',
+              label: "数据权限",
+              prop: "dataScope",
+              value: 0,
+              type: 'select',
+              dicData: [{label: '全部', value: 0}, {label: '自定义', value: 1}, {label: '本级', value: 2}],
+            },
+            {
+              label: "创建时间",
+              prop: "createTime",
               addDisplay: false, // 新增表单不显示
-              editDisplay: false, // 编辑表单不显示
-              formatter: (row, value, label) => {
-                return formatTime(new Date(value))
-              }
+              editDisplay: false // 编辑表单不显示
+            },
+            {
+              label: "备注",
+              prop: "remark",
+              type: 'textarea',
+              span: 24,
+              maxlength:100,
+              showWordLimit:true
             },
           ]
         }
@@ -132,57 +116,45 @@
     },
     computed: {
       ...mapGetters(['userInfo'])
-    }
-    ,
-    mounted() {
-
-    }
-    ,
-    created() {
-
-    }
-    ,
+    },
     methods: {
       getList() {
-        this.loading = true
+        this.loading = true;
         const data = Object.assign({
           current: this.page.currentPage,
-          size: this.page.pageSize
-        }, this.params)
-        this.data = []
+          size: this.page.pageSize,
+        }, this.params);
+        this.data = [];
         getList(data).then(res => {
           const data = res.data;
-          this.loading = false
-          this.page.total = data.total
-          const result = data.records
-          this.data = result
+          this.loading = false;
+          this.page.total = data.total;
+          const result = data.records;
+          this.data = result;
         })
-      }
-      ,
+      },
       rowSave(row, done, loading) {
         add(Object.assign({
           createUser: this.userInfo.id
         }, row)).then(() => {
-          this.$message.success('新增成功')
-          done()
-          this.getList()
+          this.$message.success('新增成功');
+          done();
+          this.getList();
         }).catch(() => {
           loading()
         })
-      }
-      ,
+      },
       rowUpdate(row, index, done, loading) {
         update(Object.assign({
           updateUser: this.userInfo.id
         }, row)).then(() => {
-          this.$message.success('修改成功')
-          done()
-          this.getList()
+          this.$message.success('修改成功');
+          done();
+          this.getList();
         }).catch(() => {
           loading()
         })
-      }
-      ,
+      },
       rowDel(row) {
         this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -191,24 +163,28 @@
         }).then(() => {
           return del([row.id])
         }).then(() => {
-          this.$message.success('删除成功')
-          this.getList()
+          this.$message.success('删除成功');
+          this.getList();
         })
-      }
-      ,
+      },
       searchChange(params, done) {
-        if (done) done()
-        this.params = params
-        this.page.currentPage = 1
-        this.getList()
+        if (done) done();
+        this.params = params;
+        this.page.currentPage = 1;
+        this.getList();
         this.$message.success('搜索成功')
-      }
-      ,
+      },
       refreshChange() {
-        this.getList()
+        this.getList();
         this.$message.success('刷新成功')
       }
-    }
+    },
+    mounted() {
+
+    },
+    created() {
+
+    },
   }
 </script>
 
