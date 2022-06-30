@@ -22,7 +22,6 @@ import org.barren.modules.system.service.ISysMenuService;
 import org.barren.modules.system.service.ISysRoleMenuService;
 import org.barren.modules.system.service.ISysRoleService;
 import org.barren.modules.system.service.ISysUserRoleService;
-import org.barren.modules.system.vo.MenuMetaVo;
 import org.barren.modules.system.vo.MenuVo;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,6 +92,36 @@ public class SysMenuController {
         return R.ok(menuTrees);
     }
 
+    @GetMapping("lazyTreeList")
+    @ApiOperation(value = "查询目录菜单数据的tree列表", notes = "查询目录菜单数据的tree列表，提供给前端 树型选择框 的数据")
+    public R<List<SysMenu>> lazyTreeList(@RequestParam Long pid) {
+        List<SysMenu> list;
+        if (pid != null && !pid.equals(0L)) {
+            list = menuService.list(Wrappers.<SysMenu>lambdaQuery()
+                    .eq(SysMenu::getPid, pid)
+                    .orderByAsc(SysMenu::getSort));
+        } else {
+            list = menuService.list(Wrappers.<SysMenu>lambdaQuery()
+                    .isNull(SysMenu::getPid)
+                    .orderByAsc(SysMenu::getSort));
+        }
+
+        // LambdaQueryWrapper<SysMenu> wrapper = Wrappers.<SysMenu>lambdaQuery()
+        //         .ne(SysMenu::getType, 2);// 不查询按钮
+        // List<SysMenu> menuList = menuService.list(wrapper);
+        // buildTree(menuList);
+        return R.ok(list);
+    }
+
+    @GetMapping("allTreeList")
+    @ApiOperation(value = "查询所有菜单数据的tree列表", notes = "查询所有菜单数据的tree列表")
+    public R<List<Tree<Long>>> allTreeList() {
+        //LambdaQueryWrapper<SysMenu> wrapper = Wrappers.<SysMenu>lambdaQuery();// 不查询按钮
+        List<SysMenu> menuList = menuService.list();
+        List<Tree<Long>> trees = buildTree(menuList);
+        return R.ok(trees);
+    }
+
 
     @GetMapping("detail")
     @ApiOperation(value = "通过id查询详情", notes = "通过id查询详情")
@@ -110,6 +139,9 @@ public class SysMenuController {
     @PostMapping("save")
     @ApiOperation(value = "新增", notes = "新增")
     public R save(@RequestBody SysMenu param) {
+        if (param.getPid() == 0) {
+            param.setPid(null);
+        }
         menuService.save(param);
         return R.ok();
     }
@@ -129,10 +161,12 @@ public class SysMenuController {
     }
 
     /**
+     * 构建 tree 列表
+     *
      * @param menuList
      * @return
      */
-    public static List<MenuVo> buildTree(List<SysMenu> menuList) {
+    public static List<Tree<Long>> buildTree(List<SysMenu> menuList) {
 
 
         TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
@@ -140,7 +174,6 @@ public class SysMenuController {
         treeNodeConfig.setIdKey("id");
         treeNodeConfig.setParentIdKey("pid");
         treeNodeConfig.setWeightKey("sort");
-
         List<Tree<Long>> list = TreeUtil.build(menuList, null, treeNodeConfig, (treeNode, tree) -> {
             tree.setId(treeNode.getId());
             tree.setParentId(treeNode.getPid());
@@ -148,27 +181,27 @@ public class SysMenuController {
             tree.setName(treeNode.getName());
 
             // 扩展属性 ... 构建 菜单路由 数据
+            tree.putExtra("label", treeNode.getTitle());
+            tree.putExtra("value", treeNode.getId());
             // 1级目录需要加斜杠，不然会报警告
-            tree.putExtra("path", treeNode.getPid() == null ? "/" + treeNode.getPath() : treeNode.getPath());
-            tree.putExtra("hidden", treeNode.getHidden());
-
-            if (treeNode.getPid() == null) {// 1级菜单，目录处理
-                tree.putExtra("component", StringUtils.isEmpty(treeNode.getComponent()) ? "Layout" : treeNode.getComponent());
-            } else if (treeNode.getType() == 0) {  // 如果不是1级菜单，并且菜单类型为目录，则代表是多级菜单
-                tree.putExtra("component", StringUtils.isEmpty(treeNode.getComponent()) ? "ParentView" : treeNode.getComponent());
-            } else if (StringUtils.isNotBlank(treeNode.getComponent())) {
-                tree.putExtra("component", treeNode.getComponent());
-            }
-            // // 如果不是外链
-            // if (treeNode.getIFrame()) {
+            // tree.putExtra("path", treeNode.getPid() == null ? "/" + treeNode.getPath() : treeNode.getPath());
+            // tree.putExtra("hidden", treeNode.getHidden());
             //
+            // if (treeNode.getPid() == null) {// 1级菜单，目录处理
+            //     tree.putExtra("component", StringUtils.isEmpty(treeNode.getComponent()) ? "Layout" : treeNode.getComponent());
+            // } else if (treeNode.getType() == 0) {  // 如果不是1级菜单，并且菜单类型为目录，则代表是多级菜单
+            //     tree.putExtra("component", StringUtils.isEmpty(treeNode.getComponent()) ? "ParentView" : treeNode.getComponent());
+            // } else if (StringUtils.isNotBlank(treeNode.getComponent())) {
+            //     tree.putExtra("component", treeNode.getComponent());
             // }
-            tree.putExtra("meta", new MenuMetaVo(treeNode.getTitle(), treeNode.getIcon(), !treeNode.getCache()));
-            tree.putExtra("hidden", treeNode.getHidden());
-
-
+            // // // 如果不是外链
+            // // if (treeNode.getIFrame()) {
+            // //
+            // // }
+            // tree.putExtra("meta", new MenuMetaVo(treeNode.getTitle(), treeNode.getIcon(), !treeNode.getCache()));
+            // tree.putExtra("hidden", treeNode.getHidden());
         });
-        return null;
+        return list;
     }
 
 }
