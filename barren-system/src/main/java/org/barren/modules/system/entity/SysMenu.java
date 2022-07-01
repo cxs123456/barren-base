@@ -1,6 +1,7 @@
 package org.barren.modules.system.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -74,6 +75,7 @@ public class SysMenu implements Serializable {
 
     @ApiModelProperty("是否外链")
     @TableField("i_frame")
+    @JsonProperty("iFrame")
     private Boolean iFrame;
 
     @ApiModelProperty("是否缓存")

@@ -149,6 +149,9 @@ public class SysMenuController {
     @PostMapping("update")
     @ApiOperation(value = "修改", notes = "通过id修改")
     public R update(@RequestBody SysMenu param) {
+        if (param.getPid() == 0) {
+            param.setPid(null);
+        }
         menuService.updateById(param);
         return R.ok();
     }

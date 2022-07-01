@@ -1,5 +1,6 @@
 package org.barren.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -65,7 +66,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
 
         return Jackson2ObjectMapperBuilder.json().modules(javaTimeModule)
-                .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).build();
+                .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .serializationInclusion(JsonInclude.Include.NON_NULL)
+                .timeZone("GMT+8")
+                .build();
     }
 
 }
