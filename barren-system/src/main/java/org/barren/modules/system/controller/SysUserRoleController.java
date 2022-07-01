@@ -33,6 +33,12 @@ public class SysUserRoleController {
         return R.ok(result);
     }
 
+    @GetMapping("list")
+    @ApiOperation(value = "查询列表", notes = "查询列表")
+    public R<List<SysUserRole>> list(SysUserRole query) {
+        return R.ok(sysUserRoleService.list(Wrappers.query(query)));
+    }
+
     @GetMapping("page" )
     @ApiOperation(value = "分页查询", notes = "分页查询")
     public R<Page<SysUserRole>> page(Page page, SysUserRole query) {

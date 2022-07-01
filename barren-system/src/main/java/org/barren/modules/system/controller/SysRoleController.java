@@ -28,12 +28,18 @@ public class SysRoleController {
 
     @GetMapping("detail")
     @ApiOperation(value = "通过id查询详情", notes = "通过id查询详情")
-    public R<SysRole> detail(@RequestParam Long id){
+    public R<SysRole> detail(@RequestParam Long id) {
         SysRole result = sysRoleService.getById(id);
         return R.ok(result);
     }
 
-    @GetMapping("page" )
+    @GetMapping("list")
+    @ApiOperation(value = "查询列表", notes = "查询列表")
+    public R<List<SysRole>> list(SysRole query) {
+        return R.ok(sysRoleService.list(Wrappers.query(query)));
+    }
+
+    @GetMapping("page")
     @ApiOperation(value = "分页查询", notes = "分页查询")
     public R<Page<SysRole>> page(Page page, SysRole query) {
         return R.ok(sysRoleService.page(page, Wrappers.query(query)));
@@ -41,21 +47,21 @@ public class SysRoleController {
 
     @PostMapping("save")
     @ApiOperation(value = "新增", notes = "新增")
-    public R save(@RequestBody SysRole param){
+    public R save(@RequestBody SysRole param) {
         sysRoleService.save(param);
         return R.ok();
     }
 
     @PostMapping("update")
     @ApiOperation(value = "修改", notes = "通过id修改")
-    public R update(@RequestBody SysRole param){
+    public R update(@RequestBody SysRole param) {
         sysRoleService.updateById(param);
         return R.ok();
     }
 
     @PostMapping("delete")
     @ApiOperation(value = "删除", notes = "通过ids删除")
-    public R delete(@RequestBody List<Long> idList){
+    public R delete(@RequestBody List<Long> idList) {
         sysRoleService.removeByIds(idList);
         return R.ok();
     }

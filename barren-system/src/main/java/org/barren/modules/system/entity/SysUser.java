@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -26,6 +27,10 @@ import java.time.LocalDateTime;
 public class SysUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @ApiModelProperty("角色id列表")
+    @TableField(exist = false)
+    private List<Long> roleIds;
 
     @ApiModelProperty("ID")
     @TableId(value = "id", type = IdType.AUTO)

@@ -5,11 +5,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.barren.core.tool.http.R;
 import org.barren.modules.system.entity.SysUser;
+import org.barren.modules.system.entity.SysUserRole;
+import org.barren.modules.system.service.ISysUserRoleService;
 import org.barren.modules.system.service.ISysUserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,15 +29,16 @@ import java.util.List;
 @AllArgsConstructor
 public class SysUserController {
     private final ISysUserService sysUserService;
+    private final ISysUserRoleService sysUserRoleService;
 
     @GetMapping("detail")
     @ApiOperation(value = "通过id查询详情", notes = "通过id查询详情")
-    public R<SysUser> detail(@RequestParam Long id){
+    public R<SysUser> detail(@RequestParam Long id) {
         SysUser result = sysUserService.getById(id);
         return R.ok(result);
     }
 
-    @GetMapping("page" )
+    @GetMapping("page")
     @ApiOperation(value = "分页查询", notes = "分页查询")
     public R<Page<SysUser>> page(Page page, SysUser query) {
         return R.ok(sysUserService.page(page, Wrappers.query(query)));
@@ -41,21 +46,47 @@ public class SysUserController {
 
     @PostMapping("save")
     @ApiOperation(value = "新增", notes = "新增")
-    public R save(@RequestBody SysUser param){
+    public R save(@RequestBody SysUser param) {
         sysUserService.save(param);
+
+        List<Long> roleIds = param.getRoleIds();
+        if (CollectionUtils.isNotEmpty(roleIds)) {
+            // 新增角色
+            Long id = param.getId();
+            List<SysUserRole> addList = new ArrayList<>();
+            for (Long roleId : roleIds) {
+                addList.add(new SysUserRole().setUserId(id).setRoleId(roleId));
+            }
+            sysUserRoleService.saveBatch(addList);
+        }
+
         return R.ok();
     }
 
     @PostMapping("update")
     @ApiOperation(value = "修改", notes = "通过id修改")
-    public R update(@RequestBody SysUser param){
+    public R update(@RequestBody SysUser param) {
         sysUserService.updateById(param);
+
+        List<Long> roleIds = param.getRoleIds();
+        if (CollectionUtils.isNotEmpty(roleIds)) {
+            Long id = param.getId();
+            // 修改角色
+            sysUserRoleService.remove(Wrappers.query(new SysUserRole().setUserId(id)));
+
+            List<SysUserRole> addList = new ArrayList<>();
+            for (Long roleId : roleIds) {
+                addList.add(new SysUserRole().setUserId(id).setRoleId(roleId));
+            }
+            sysUserRoleService.saveBatch(addList);
+        }
+
         return R.ok();
     }
 
     @PostMapping("delete")
     @ApiOperation(value = "删除", notes = "通过ids删除")
-    public R delete(@RequestBody List<Long> idList){
+    public R delete(@RequestBody List<Long> idList) {
         sysUserService.removeByIds(idList);
         return R.ok();
     }
