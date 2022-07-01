@@ -92,3 +92,16 @@ export function saveRoleMenus(data) {
     data
   })
 }
+
+/**
+ * 查询列表
+ *
+ * @param data
+ */
+export function list(data) {
+  return request({
+    url: '/system/sysRole/list',
+    method: 'get',
+    params: data
+  })
+}

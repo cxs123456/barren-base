@@ -11,6 +11,7 @@
       @row-update="rowUpdate"
       @row-save="rowSave"
       @row-del="rowDel"
+      :before-open="beforeOpen"
       @refresh-change="refreshChange"
       @search-reset="searchChange"
       @search-change="searchChange"
@@ -20,8 +21,9 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import {add, del, getList, update} from '@/api/system/user'
-  import { parseTime, formatTime } from '@/utils'
+  import {add, del, getList, update, userRoleList} from '@/api/system/user'
+  import {list} from '@/api/system/sysRole'
+  import {parseTime, formatTime} from '@/utils'
 
   export default {
     name: 'User',
@@ -32,6 +34,7 @@
         params: {},
         loading: false,
         data: [],
+        roleDicData: [],// 角色字段数据
         option: {
           rowKey: 'id',
           selection: true, // 显示多选
@@ -127,22 +130,34 @@
                 return formatTime(new Date(value))
               }
             },
+            {
+              label: '角色',
+              prop: 'roleIds',
+              type: 'select',
+              multiple: true,
+              span: 24,
+              hide: true,
+              dicData: [{
+                label: '字典1',
+                value: 0
+              }, {
+                label: '字典2',
+                value: 1
+              }]
+            }
           ]
         }
       }
     },
     computed: {
       ...mapGetters(['userInfo'])
-    }
-    ,
+    },
     mounted() {
 
-    }
-    ,
+    },
     created() {
 
-    }
-    ,
+    },
     methods: {
       getList() {
         this.loading = true
@@ -158,8 +173,7 @@
           const result = data.records
           this.data = result
         })
-      }
-      ,
+      },
       rowSave(row, done, loading) {
         add(Object.assign({
           createUser: this.userInfo.id
@@ -170,8 +184,7 @@
         }).catch(() => {
           loading()
         })
-      }
-      ,
+      },
       rowUpdate(row, index, done, loading) {
         update(Object.assign({
           updateUser: this.userInfo.id
@@ -182,8 +195,7 @@
         }).catch(() => {
           loading()
         })
-      }
-      ,
+      },
       rowDel(row) {
         this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -195,21 +207,49 @@
           this.$message.success('删除成功')
           this.getList()
         })
-      }
-      ,
+      },
       searchChange(params, done) {
         if (done) done()
         this.params = params
         this.page.currentPage = 1
         this.getList()
         this.$message.success('搜索成功')
-      }
-      ,
+      },
       refreshChange() {
         this.getList()
         this.$message.success('刷新成功')
-      }
-    }
+      },
+      beforeOpen(done, type) {
+        var prop = this.findObject(this.option.column, 'roleIds');
+        prop.dicData = this.roleDicData;
+        let form = this.form;
+        if (form.id) {
+          userRoleList({userId: form.id}).then(res => {
+            let list = res.data
+            let roleIds = list.map(item => item.roleId)
+            this.form.roleIds = roleIds
+            done();
+          })
+        } else {
+          done();
+        }
+      },
+    },
+    mounted() {
+      // 查询所有角色
+      list().then(res => {
+        let list = res.data
+        let dicData = list.map(item => {
+          return {label: item.name, value: item.id}
+        });
+        this.roleDicData = dicData
+        var prop = this.findObject(this.option.column, 'roleIds');
+        prop.dicData = this.roleDicData;
+      })
+    },
+    created() {
+
+    },
   }
 </script>
 

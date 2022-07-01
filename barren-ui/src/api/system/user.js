@@ -66,3 +66,16 @@ export function del(ids) {
     data: ids
   })
 }
+
+/**
+ * 查询用户角色
+ *
+ * @param id
+ */
+export function userRoleList(data) {
+  return request({
+    url: '/system/sysUserRole/list',
+    method: 'get',
+    params: data
+  })
+}
