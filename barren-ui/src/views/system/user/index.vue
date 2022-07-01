@@ -52,7 +52,7 @@
             {
               label: '用户名',
               prop: 'username',
-              search: true,
+              search: true, // 设置字段搜索
               rules: [{
                 required: true,
                 message: '请输入必选项的值',
@@ -122,6 +122,7 @@
               prop: 'createTime',
               addDisplay: false, // 新增表单不显示
               editDisplay: false, // 编辑表单不显示
+              display: false, // 弹出框表单不显示
               formatter: (row, value, label) => {
                 return formatTime(new Date(value))
               }
