@@ -61,8 +61,6 @@
   import {add, del, getTreeList, update, lazyTreeList, allTreeList} from "@/api/system/sysMenu"
   import Treeselect, {LOAD_CHILDREN_OPTIONS} from '@riophae/vue-treeselect'
   import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-  import svgIcons from '@/views/icons/svg-icons'
-  import elementIcons from '@/views/icons/element-icons'
   import IconSelect from '@/components/IconSelect'
 
 

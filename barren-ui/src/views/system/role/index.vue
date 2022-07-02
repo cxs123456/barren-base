@@ -60,7 +60,7 @@
   import {allTreeList} from "@/api/system/sysMenu"
 
   export default {
-    name: "SysRole",
+    name: "Role",
     data() {
       return {
         page: {},
