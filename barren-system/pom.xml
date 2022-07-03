@@ -30,6 +30,11 @@
 
         <dependency>
             <groupId>org.barren</groupId>
+            <artifactId>barren-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.barren</groupId>
             <artifactId>barren-starter-redis</artifactId>
         </dependency>
 

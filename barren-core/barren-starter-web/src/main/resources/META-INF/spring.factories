@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    org.barren.core.web.config.I18nConfig,\
+    org.barren.core.web.GlobalExceptionHandler

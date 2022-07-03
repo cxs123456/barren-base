@@ -1,5 +1,6 @@
 package org.barren;
 
+import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,6 +58,9 @@ public class App {
 
     @GetMapping("/anyone")
     public String anyone() {
+        if (RandomUtil.randomInt(10) > 5) {
+            throw new RuntimeException("zzz");
+        }
         return "hello anyone, you need't token";
     }
 }

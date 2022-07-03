@@ -92,7 +92,7 @@
 
             <dependency>
                 <groupId>org.barren</groupId>
-                <artifactId>barren-starter-jwt</artifactId>
+                <artifactId>barren-starter-web</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -213,7 +213,6 @@
             <groupId>com.baomidou</groupId>
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
         </dependency>-->
-
 
         <!--Mysql依赖包-->
         <dependency>
@@ -360,7 +359,6 @@
             <artifactId>annotations</artifactId>
             <version>23.0.0</version>
         </dependency>
-
 
     </dependencies>
 

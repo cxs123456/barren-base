@@ -12,7 +12,6 @@ spring:
     default-property-inclusion: non_null
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
-
   main:
     allow-circular-references: true # 允许循环依赖，因为项目是三层架构，无法避免这个情况。
   # Servlet 配置
@@ -24,6 +23,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher # # 解决 SpringFox 与 SpringBoot 2.6.x 不兼容的问题
+    throw-exception-if-no-handler-found: true  # ExceptionHandler没有就抛出异常
   # 配置Redis
   redis:
     #数据库索引
@@ -38,6 +38,10 @@ spring:
     type: REDIS
     redis:
       time-to-live: 1h # 设置过期时间为 1 小时
+  # 配置 MessageSource
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
 
 
 # mybatis-plus 配置
