@@ -83,6 +83,13 @@ auth:
       clientSecret: 123456
     - clientId: web
       clientSecret: barren
-  # 登录配置
-  login:
+  # 登录配置 验证码
+  login-code:
+    expire: 2
+  # 配置 jwt Token续期
+  jwt-config:
+    detect: 1200
+
+
+
 

@@ -1,10 +1,16 @@
 package org.barren.core.auth.config;
 
+import org.barren.core.auth.filter.TokenRenewFilter;
+import org.barren.core.auth.properties.AuthProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableResourceServer
@@ -13,6 +19,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     //公钥
     private static final String PUBLIC_KEY = "public.key";
 
+    @Autowired
+    private TokenStore tokenStore;
+    @Autowired
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
+    @Autowired
+    private AuthProperties properties;
     // /***
     //  * 定义JwtTokenStore
     //  * @param jwtAccessTokenConverter
@@ -61,6 +73,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
         // 默认不拦截/token/**下的路径，下面不必配置
         // http.antMatcher("/oauth/**").authorizeRequests().antMatchers("/oauth/**").permitAll().and().csrf().disable();
+        // 将自定义的过滤器添加到Spring Security 过滤器链中
+        // http.addFilterAfter(new TokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(new TokenRenewFilter(tokenStore, jwtAccessTokenConverter, properties), BasicAuthenticationFilter.class);
     }
 
 

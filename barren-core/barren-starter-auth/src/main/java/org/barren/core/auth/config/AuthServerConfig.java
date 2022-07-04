@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder;
@@ -38,6 +39,10 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     private AuthenticationConfiguration authenticationConfiguration;
     @Autowired
     private AuthProperties properties;
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+
     /***
      * 客户端信息配置，指定客户端登录信息来源
      * 为了测试客户端与凭证存储在内存(生产应该用数据库来存储,oauth有标准数据库模板)
@@ -78,9 +83,9 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
                     // 重定向地址
                     .redirectUris("http://localhost")
                     // 访问令牌有效期
-                    .accessTokenValiditySeconds(6000)
+                    .accessTokenValiditySeconds(properties.getJwtConfig().getTokenValidSeconds())
                     // 刷新令牌有效期
-                    .refreshTokenValiditySeconds(9000)
+                    .refreshTokenValiditySeconds(properties.getJwtConfig().getRefreshTokenValidSeconds())
                     // 该client允许的授权类型 authorization_code, password, refresh_token, implicit, client_credentials
                     .authorizedGrantTypes("password", "authorization_code", "client_credentials", "refresh_token", "implicit")
                     // 客户端授权范围，名称自定义，必填
@@ -153,6 +158,11 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Bean
     public TokenStore tokenStore() {
+
+
+        /* 如果使用 JwtTokenStore， jwt token是无状态的，信息都放在了JWT中，
+         * 如果修改了过期时间信息，那么JWT也就变了，所以这个时候最好用刷新令牌方案来续期token
+         */
         return new JwtTokenStore(this.jwtAccessTokenConverter());
     }
 
@@ -188,31 +198,43 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
         // 针对 jwt令牌的添加
         // defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter());
         TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
-        enhancerChain.setTokenEnhancers(Stream.<TokenEnhancer>of((oAuth2AccessToken, oAuth2Authentication) -> {
-            // 在返回 token 中加上一些自定义数据，在jwt中解析也会得到
-            UserJwt userJwt = (UserJwt) oAuth2Authentication.getPrincipal();// 获取用户信息
-            DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) oAuth2AccessToken;
-            Map<String, Object> map = new LinkedHashMap<>();
-            map.put("nickname", userJwt.getNickname());
-            map.put("id", userJwt.getId());
-            map.put("phone", userJwt.getPhone());
-            map.put("roles", userJwt.getRoles());
-            map.put("ok", true);
-            token.setAdditionalInformation(map);
-            return token;
-        }, jwtAccessTokenConverter()).collect(Collectors.toList()));
+        enhancerChain.setTokenEnhancers(
+                Stream.<TokenEnhancer>of((oAuth2AccessToken, oAuth2Authentication) -> {
+                            DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) oAuth2AccessToken;
+                            UserJwt userJwt;
+                            // 在返回 token 中加上一些自定义数据，在jwt中解析也会得到
+                            if (oAuth2Authentication.getPrincipal() instanceof UserJwt) { // 密码模式生成的token，走这段逻辑
+                                userJwt = (UserJwt) oAuth2Authentication.getPrincipal();// 获取用户信息
+                            } else {// 刷新token，走这段逻辑
+                                String principal = (String) oAuth2Authentication.getPrincipal();
+                                userJwt = (UserJwt) userDetailsService.loadUserByUsername(principal);
+                            }
+                            // 在返回 token 中加上一些自定义数据，在jwt中解析也会得到
+                            Map<String, Object> map = new LinkedHashMap<>();
+                            map.put("nickname", userJwt.getNickname());
+                            map.put("id", userJwt.getId());
+                            map.put("phone", userJwt.getPhone());
+                            map.put("roles", userJwt.getRoles());
+                            map.put("ok", true);
+                            token.setAdditionalInformation(map);
+                            return token;
+                        }, jwtAccessTokenConverter()
+                ).collect(Collectors.toList()));
         defaultTokenServices.setTokenEnhancer(enhancerChain);
         // 设置令牌有效时间（一般设置为2个小时）
-        defaultTokenServices.setAccessTokenValiditySeconds(2 * 60 * 60); // access_token就是我们请求资源需要携带的令牌
+        //defaultTokenServices.setAccessTokenValiditySeconds(2 * 60 * 60); // access_token就是我们请求资源需要携带的令牌
+        defaultTokenServices.setAccessTokenValiditySeconds(properties.getJwtConfig().getTokenValidSeconds()); // access_token就是我们请求资源需要携带的令牌
         // 如果前端觉得麻烦，那么直接设置0或者负数，永远不过期
         // defaultTokenServices.setAccessTokenValiditySeconds(-1);
         // 设置刷新令牌的有效时间
-        defaultTokenServices.setRefreshTokenValiditySeconds(259200); // 3天
+        //defaultTokenServices.setRefreshTokenValiditySeconds(259200); // 3天
+        defaultTokenServices.setRefreshTokenValiditySeconds(properties.getJwtConfig().getRefreshTokenValidSeconds()); // 3天
         return defaultTokenServices;
     }
 
     /**
      * 获取jwt中的用户信息工具类
+     *
      * @return
      */
     @Bean
