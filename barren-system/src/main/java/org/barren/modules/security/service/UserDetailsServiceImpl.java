@@ -57,6 +57,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         String pwd = user.getPassword();
         List<String> permissions = new ArrayList<>();
         if (user.getIsAdmin()) {
+            // 添加 admin 权限
             permissions.add("admin");
         } else {
             // 查询角色 和 菜单 权限

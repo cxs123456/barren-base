@@ -11,6 +11,8 @@ import org.barren.modules.system.entity.SysUser;
 import org.barren.modules.system.entity.SysUserRole;
 import org.barren.modules.system.service.ISysUserRoleService;
 import org.barren.modules.system.service.ISysUserService;
+import org.barren.modules.system.vo.UserPassVo;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ public class SysUserController {
     private final ISysUserService sysUserService;
     private final ISysUserRoleService sysUserRoleService;
 
+    private final BCryptPasswordEncoder passwordEncoder;
+
     @GetMapping("detail")
     @ApiOperation(value = "通过id查询详情", notes = "通过id查询详情")
     public R<SysUser> detail(@RequestParam Long id) {
@@ -47,6 +51,9 @@ public class SysUserController {
     @PostMapping("save")
     @ApiOperation(value = "新增", notes = "新增")
     public R save(@RequestBody SysUser param) {
+
+        // 默认密码是 888888
+        param.setPassword(passwordEncoder.encode("123456"));
         sysUserService.save(param);
 
         List<Long> roleIds = param.getRoleIds();
@@ -84,10 +91,46 @@ public class SysUserController {
         return R.ok();
     }
 
+    /**
+     * @param idList
+     * @return
+     */
     @PostMapping("delete")
     @ApiOperation(value = "删除", notes = "通过ids删除")
     public R delete(@RequestBody List<Long> idList) {
         sysUserService.removeByIds(idList);
+        return R.ok();
+    }
+
+    /**
+     * 密码设置
+     *
+     * @param param
+     * @return
+     */
+    @PostMapping("updatePass")
+    @ApiOperation(value = "修改密码", notes = "通过id修改修改密码")
+    public R updatePass(@RequestBody UserPassVo param) {
+        // todo 配置 admin可以修改任何人的密码
+        // UserInfo currentUser = AuthUtil.getCurrentUser();
+
+        // todo 这里密码需要前后端 RSA 加密传输
+        String newPass = param.getNewPass();
+        String oldPass = param.getOldPass();
+        // 1、修改密码，判断用户是激活状态就修改
+        SysUser user = sysUserService.getById(param.getId());
+        if (user.getStatus() != 1) {
+            return R.fail("用户未激活！请联系管理员激活");
+        }
+        if (!passwordEncoder.matches(oldPass, user.getPassword())) {
+            return R.fail("修改失败，旧密码错误");
+        }
+        if (passwordEncoder.matches(newPass, user.getPassword())) {
+            return R.fail("新密码不能与旧密码相同");
+        }
+
+        user.setPassword(passwordEncoder.encode(param.getNewPass()));
+        sysUserService.updateById(user);
         return R.ok();
     }
 }

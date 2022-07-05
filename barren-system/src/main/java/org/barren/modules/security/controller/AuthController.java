@@ -1,7 +1,7 @@
 package org.barren.modules.security.controller;
 
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wf.captcha.ArithmeticCaptcha;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,14 +10,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.barren.core.auth.properties.AuthProperties;
 import org.barren.core.auth.utils.AuthUtil;
+import org.barren.core.auth.utils.UserInfo;
 import org.barren.core.tool.http.R;
 import org.barren.modules.security.entity.LoginRequest;
+import org.barren.modules.system.entity.SysUser;
+import org.barren.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +43,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Api(tags = "系统：系统认证授权接口")
 public class AuthController {
-
+    @Autowired
+    private ISysUserService userService;
     @Autowired
     private AuthProperties properties;
     @Autowired
@@ -70,6 +73,13 @@ public class AuthController {
         String password = loginRequest.getPassword();
         if (StringUtils.isAnyBlank(username, password)) {
             return R.fail("用户名或密码错误");
+        }
+        SysUser user = userService.getOne(Wrappers.<SysUser>lambdaQuery().eq(SysUser::getUsername, username));
+        if (user == null) {
+            return R.fail("不存在用户名");
+        }
+        if (user.getStatus() != 1) {
+            return R.fail("用户未激活！请联系管理员");
         }
         String clientId = authProperties.getClients().get(0).getClientId();
         String clientSecret = authProperties.getClients().get(0).getClientSecret();
@@ -118,13 +128,12 @@ public class AuthController {
 
     @ApiOperation("获取用户信息")
     @GetMapping(value = "/info")
-    public R<JSONObject> getUserInfo() {
+    public R<UserInfo> getUserInfo() {
         // 获取用户认证信息 org.springframework.security.core.userdetails.UserDetails
         // UserJwt user = (UserJwt) (SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        SecurityContextHolder.getContext().getAuthentication();
-        JSONObject userInfo = AuthUtil.getUserInfo();
+        UserInfo currentUser = AuthUtil.getCurrentUser();
 
-        return R.ok(userInfo);
+        return R.ok(currentUser);
     }
 
     /**
