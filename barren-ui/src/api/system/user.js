@@ -79,3 +79,17 @@ export function userRoleList(data) {
     params: data
   })
 }
+
+
+/**
+ * 通过id修改密码
+ *
+ * @param data
+ */
+export function updatePass(data) {
+  return request({
+    url: '/system/sysUser/updatePass',
+    method: 'post',
+    data: data
+  })
+}

@@ -23,7 +23,7 @@
   import {mapGetters} from 'vuex'
   import {add, del, getList, update, userRoleList} from '@/api/system/user'
   import {list} from '@/api/system/sysRole'
-  import {parseTime, formatTime} from '@/utils'
+  import {formatTime} from '@/utils'
 
   export default {
     name: 'User',
@@ -108,7 +108,7 @@
             {
               label: '状态',
               prop: 'status',
-              value: 1,
+              value: 0,
               type: 'switch',
               props: {
                 label: 'name',
@@ -151,12 +151,6 @@
     },
     computed: {
       ...mapGetters(['userInfo'])
-    },
-    mounted() {
-
-    },
-    created() {
-
     },
     methods: {
       getList() {

@@ -29,13 +29,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import UserCard from './components/UserCard'
-import Activity from './components/Activity'
-import Timeline from './components/Timeline'
-import Account from './components/Account'
+  import {mapGetters} from 'vuex'
+  import UserCard from './components/UserCard'
+  import Activity from './components/Activity'
+  import Timeline from './components/Timeline'
+  import Account from './components/Account'
 
-export default {
+  export default {
   name: 'Profile',
   components: { UserCard, Activity, Timeline, Account },
   data() {
@@ -48,7 +48,8 @@ export default {
     ...mapGetters([
       'name',
       'avatar',
-      'roles'
+      'roles',
+      'userInfo',
     ])
   },
   created() {
@@ -57,7 +58,7 @@ export default {
   methods: {
     getUser() {
       this.user = {
-        name: this.name,
+        name: this.userInfo.nickname,
         role: this.roles.join(' | '),
         email: 'admin@test.com',
         avatar: this.avatar

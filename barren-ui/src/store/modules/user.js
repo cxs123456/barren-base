@@ -60,7 +60,7 @@ const user = {
             reject('Verification failed, please Login again.')
           }
 
-          let {roles, name, avatar, introduction} = data;
+          let {roles, username, avatar, introduction} = data;
           // 如果没有任何权限，则赋予一个默认的权限，避免请求死循环
           if (!roles || roles.length <= 0) {
             roles = ['ROLE_SYSTEM_DEFAULT']
@@ -71,7 +71,7 @@ const user = {
           // }
 
           commit('SET_ROLES', roles);
-          commit('SET_NAME', name);
+          commit('SET_NAME', username);
           commit('SET_AVATAR', avatar);
           commit('SET_INTRODUCTION', introduction);
           commit('SET_USERINFO', data);
