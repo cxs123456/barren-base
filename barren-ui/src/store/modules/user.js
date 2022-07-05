@@ -1,6 +1,6 @@
-import { getInfo, login, logout } from '@/api/login'
-import { getToken, removeToken, setToken } from '@/utils/auth'
-import router, { resetRouter } from '@/router'
+import {getInfo, login} from '@/api/login'
+import {getToken, removeToken, setToken} from '@/utils/auth'
+import router, {resetRouter} from '@/router'
 
 const user = {
   namespaced: true, // 添加命名空间，比如调用 dispatch('user/login')
@@ -36,8 +36,8 @@ const user = {
 
   actions: {
     // user login
-    login({ commit }, userInfo) {
-      const { username, password, code, codeKey } = userInfo;
+    login({commit}, userInfo) {
+      const {username, password, code, codeKey} = userInfo;
       return new Promise((resolve, reject) => {
         login(username.trim(), password, code, codeKey).then(response => {
           const data = response.data;
@@ -51,16 +51,16 @@ const user = {
     },
 
     // get user info
-    getInfo({ commit, state }) {
+    getInfo({commit, state}) {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
-          const { data } = response;
+          const {data} = response;
           console.log(response);
           if (!data) {
             reject('Verification failed, please Login again.')
           }
 
-          let { roles, name, avatar, introduction } = data;
+          let {roles, name, avatar, introduction} = data;
           // 如果没有任何权限，则赋予一个默认的权限，避免请求死循环
           if (!roles || roles.length <= 0) {
             roles = ['ROLE_SYSTEM_DEFAULT']
@@ -83,27 +83,36 @@ const user = {
     },
 
     // user logout
-    logout({ commit, state, dispatch }) {
+    logout({commit, state, dispatch}) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('SET_TOKEN', '');
-          commit('SET_ROLES', []);
-          removeToken();
-          resetRouter();
+        // logout(state.token).then(() => {
+        //   commit('SET_TOKEN', '');
+        //   commit('SET_ROLES', []);
+        //   removeToken();
+        //   resetRouter();
+        //
+        //   // reset visited views and cached views
+        //   // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
+        //   dispatch('tagsView/delAllViews', null, { root: true });
+        //
+        //   resolve()
+        // }).catch(error => {
+        //   reject(error)
+        // })
 
-          // reset visited views and cached views
-          // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
-          dispatch('tagsView/delAllViews', null, { root: true });
-
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        commit('SET_TOKEN', '');
+        commit('SET_ROLES', []);
+        removeToken();
+        resetRouter();
+        // reset visited views and cached views
+        // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
+        dispatch('tagsView/delAllViews', null, {root: true});
+        resolve()
       })
     },
 
     // remove token
-    resetToken({ commit }) {
+    resetToken({commit}) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '');
         commit('SET_ROLES', []);
@@ -113,23 +122,23 @@ const user = {
     },
 
     // dynamically modify permissions
-    async changeRoles({ commit, dispatch }, role) {
+    async changeRoles({commit, dispatch}, role) {
       const token = role + '-token';
 
       commit('SET_TOKEN', token);
       setToken(token);
 
-      const { roles } = await dispatch('getInfo');
+      const {roles} = await dispatch('getInfo');
 
       resetRouter();
 
       // generate accessible routes map based on roles
-      const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true });
+      const accessRoutes = await dispatch('permission/generateRoutes', roles, {root: true});
       // dynamically add accessible routes
       router.addRoutes(accessRoutes);
 
       // reset visited views and cached views
-      dispatch('tagsView/delAllViews', null, { root: true })
+      dispatch('tagsView/delAllViews', null, {root: true})
     }
   }
 };

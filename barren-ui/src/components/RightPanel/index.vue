@@ -2,9 +2,9 @@
   <div ref="rightPanel" :class="{show:show}" class="rightPanel-container">
     <div class="rightPanel-background" />
     <div class="rightPanel">
-      <div class="handle-button" :style="{'top':buttonTop+'px','background-color':theme}" @click="show=!show">
-        <i :class="show?'el-icon-close':'el-icon-setting'" />
-      </div>
+      <!--<div class="handle-button" :style="{'top':buttonTop+'px','background-color':theme}" @click="show=!show">-->
+        <!--<i :class="show?'el-icon-close':'el-icon-setting'" />-->
+      <!--</div>-->
       <div class="rightPanel-items">
         <slot />
       </div>
@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import { addClass, removeClass } from '@/utils'
+  import {addClass, removeClass} from '@/utils'
 
-export default {
+  export default {
   name: 'RightPanel',
   props: {
     clickNotClose: {
@@ -29,10 +29,21 @@ export default {
   },
   data() {
     return {
-      show: false
+      // show: false
     }
   },
   computed: {
+    show: {
+      get() {
+        return this.$store.state.settings.showSettings
+      },
+      set(val) {
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'showSettings',
+          value: val
+        })
+      }
+    },
     theme() {
       return this.$store.state.settings.theme
     }
@@ -51,6 +62,7 @@ export default {
   },
   mounted() {
     this.insertToBody()
+    this.addEventClick()
   },
   beforeDestroy() {
     const elx = this.$refs.rightPanel;
