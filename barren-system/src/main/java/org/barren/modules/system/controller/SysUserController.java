@@ -12,6 +12,7 @@ import org.barren.modules.system.entity.SysUserRole;
 import org.barren.modules.system.service.ISysUserRoleService;
 import org.barren.modules.system.service.ISysUserService;
 import org.barren.modules.system.vo.UserPassVo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +51,7 @@ public class SysUserController {
 
     @PostMapping("save")
     @ApiOperation(value = "新增", notes = "新增")
+    @PreAuthorize("@el.check('user:add') or hasRole('admin')")
     public R save(@RequestBody SysUser param) {
 
         // 默认密码是 888888
@@ -72,6 +74,7 @@ public class SysUserController {
 
     @PostMapping("update")
     @ApiOperation(value = "修改", notes = "通过id修改")
+    @PreAuthorize("(hasRole('admin') or hasAuthority('admin')) and #param.id>0 ")
     public R update(@RequestBody SysUser param) {
         sysUserService.updateById(param);
 
@@ -97,6 +100,7 @@ public class SysUserController {
      */
     @PostMapping("delete")
     @ApiOperation(value = "删除", notes = "通过ids删除")
+    @PreAuthorize("hasRole('admin') or hasAuthority('admin')")
     public R delete(@RequestBody List<Long> idList) {
         sysUserService.removeByIds(idList);
         return R.ok();

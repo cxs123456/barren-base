@@ -55,6 +55,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return null;
         }
         String pwd = user.getPassword();
+        // TODO 这里应该是角色名称列表数据
         List<String> permissions = new ArrayList<>();
         if (user.getIsAdmin()) {
             // 添加 admin 权限
@@ -65,7 +66,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             List<SysUserRole> userRoleList = userRoleService.list(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, userId));
             if (CollectionUtils.isNotEmpty(userRoleList)) {
                 List<Long> roleIds = userRoleList.stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
-                // 2.查询 角色菜单列表，获取菜单
+                // 2.查询 角色菜单列表，获取菜单， TODO 菜单按钮权限字符标识数据保存Redis中，从Redis中获取
                 List<SysRoleMenu> roleMenuList = roleMenuService.list(Wrappers.<SysRoleMenu>lambdaQuery().in(SysRoleMenu::getRoleId, roleIds));
                 if (CollectionUtils.isNotEmpty(roleMenuList)) {
                     List<Long> menuIds = roleMenuList.stream().map(SysRoleMenu::getMenuId).collect(Collectors.toList());
@@ -76,7 +77,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
         }
         //创建User对象
-        //String permissions = "admin,user";
+        // String permissions = "admin,user";
         UserJwt userDetails = new UserJwt(username, pwd, AuthorityUtils.commaSeparatedStringToAuthorityList(StringUtils.join(permissions, ",")));
         userDetails.setNickname(user.getNickName());
         userDetails.setId(user.getId());

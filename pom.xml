@@ -185,6 +185,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
         <!-- SpringBoot 热部署组件 -->
         <!--<dependency>-->
         <!--<groupId>org.springframework.boot</groupId>-->

@@ -23,6 +23,7 @@ import org.barren.modules.system.service.ISysRoleMenuService;
 import org.barren.modules.system.service.ISysRoleService;
 import org.barren.modules.system.service.ISysUserRoleService;
 import org.barren.modules.system.vo.MenuVo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -138,6 +139,7 @@ public class SysMenuController {
 
     @PostMapping("save")
     @ApiOperation(value = "新增", notes = "新增")
+    @PreAuthorize("@el.check('menu:add') or hasRole('admin')")
     public R save(@RequestBody SysMenu param) {
         if (param.getPid() == 0) {
             param.setPid(null);
@@ -148,6 +150,7 @@ public class SysMenuController {
 
     @PostMapping("update")
     @ApiOperation(value = "修改", notes = "通过id修改")
+    @PreAuthorize("@el.check('menu:update') or hasRole('admin')")
     public R update(@RequestBody SysMenu param) {
         if (param.getPid() == 0) {
             param.setPid(null);
@@ -158,6 +161,7 @@ public class SysMenuController {
 
     @PostMapping("delete")
     @ApiOperation(value = "删除", notes = "通过ids删除")
+    @PreAuthorize("@el.check('menu:delete') or hasRole('admin')")
     public R delete(@RequestBody List<Long> idList) {
         menuService.removeByIds(idList);
         return R.ok();

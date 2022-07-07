@@ -5,12 +5,13 @@ import org.barren.core.tool.http.R;
 import org.barren.core.web.i18n.MessageSourceUtil;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import java.nio.file.AccessDeniedException;
 import java.util.Objects;
 
 /**
@@ -35,7 +36,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 访问拒绝异常
+     * 访问拒绝异常，一般指的是方法接口未授权 {@link Authentication#getAuthorities()}
      *
      * @param e
      * @param request

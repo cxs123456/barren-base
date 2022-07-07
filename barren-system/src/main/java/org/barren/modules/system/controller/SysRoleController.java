@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.barren.core.tool.http.R;
 import org.barren.modules.system.entity.SysRole;
 import org.barren.modules.system.service.ISysRoleService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +48,7 @@ public class SysRoleController {
 
     @PostMapping("save")
     @ApiOperation(value = "新增", notes = "新增")
+    @PreAuthorize("@el.check('role:add') or hasRole('admin')")
     public R save(@RequestBody SysRole param) {
         sysRoleService.save(param);
         return R.ok();
@@ -54,6 +56,7 @@ public class SysRoleController {
 
     @PostMapping("update")
     @ApiOperation(value = "修改", notes = "通过id修改")
+    @PreAuthorize("@el.check('role:update') or hasRole('admin')")
     public R update(@RequestBody SysRole param) {
         sysRoleService.updateById(param);
         return R.ok();
@@ -61,6 +64,7 @@ public class SysRoleController {
 
     @PostMapping("delete")
     @ApiOperation(value = "删除", notes = "通过ids删除")
+    @PreAuthorize("@el.check('role:delete') or hasRole('admin')")
     public R delete(@RequestBody List<Long> idList) {
         sysRoleService.removeByIds(idList);
         return R.ok();

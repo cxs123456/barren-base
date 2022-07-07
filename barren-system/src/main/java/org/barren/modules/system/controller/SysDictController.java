@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.barren.core.tool.http.R;
 import org.barren.modules.system.entity.SysDict;
 import org.barren.modules.system.service.ISysDictService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,12 +43,14 @@ public class SysDictController {
 
     @GetMapping("page" )
     @ApiOperation(value = "分页查询", notes = "分页查询")
+    @PreAuthorize("@el.check('dict:list') or hasRole('admin')")
     public R<Page<SysDict>> page(Page page, SysDict query) {
         return R.ok(sysDictService.page(page, Wrappers.query(query)));
     }
 
     @PostMapping("save")
     @ApiOperation(value = "新增", notes = "新增")
+    @PreAuthorize("@el.check('dict:add') or hasRole('admin')")
     public R save(@RequestBody SysDict param){
         sysDictService.save(param);
         return R.ok();
@@ -55,6 +58,7 @@ public class SysDictController {
 
     @PostMapping("update")
     @ApiOperation(value = "修改", notes = "通过id修改")
+    @PreAuthorize("@el.check('dict:update') or hasRole('admin')")
     public R update(@RequestBody SysDict param){
         sysDictService.updateById(param);
         return R.ok();
@@ -62,6 +66,7 @@ public class SysDictController {
 
     @PostMapping("delete")
     @ApiOperation(value = "删除", notes = "通过ids删除")
+    @PreAuthorize("@el.check('dict:delete') or hasRole('admin')")
     public R delete(@RequestBody List<Long> idList){
         sysDictService.removeByIds(idList);
         return R.ok();
