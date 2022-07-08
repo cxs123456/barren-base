@@ -15,6 +15,7 @@
       @refresh-change="refreshChange"
       @search-reset="searchChange"
       @search-change="searchChange"
+      :permission="permission"
     />
   </div>
 </template>
@@ -29,6 +30,7 @@
     name: 'User',
     data() {
       return {
+        permission: {},
         page: {},
         form: {},
         params: {},
@@ -239,7 +241,14 @@
         this.roleDicData = dicData
         var prop = this.findObject(this.option.column, 'roleIds');
         prop.dicData = this.roleDicData;
-      })
+      });
+
+      // 权限判断
+      let addBtn = this.$checkPermission(['user:add']);
+      let editBtn = this.$checkPermission(['user:update']);
+      let delBtn = this.$checkPermission(['user:delete']);
+      this.permission = {addBtn, editBtn, delBtn}
+
     },
     created() {
 

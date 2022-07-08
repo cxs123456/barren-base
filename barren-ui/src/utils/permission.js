@@ -9,7 +9,10 @@ export default function checkPermission(value) {
   if (value && value instanceof Array && value.length > 0) {
     const roles = store.getters && store.getters.roles;
     const permissionRoles = value;
-
+    // admin权限是 root
+    if (roles.includes('admin')) {
+      return true
+    }
     const hasPermission = roles.some(role => {
       return permissionRoles.includes(role)
     });

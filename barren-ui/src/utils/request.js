@@ -52,7 +52,7 @@ service.interceptors.response.use(
     const msg = response.data.msg;
     if (code == 401) {
       Message({
-        message: '用户名或密码错误',
+        message: msg || '未授权！',
         type: 'error',
         duration: 5 * 1000
       });
