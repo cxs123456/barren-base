@@ -74,7 +74,7 @@ public class SysUserController {
 
     @PostMapping("update")
     @ApiOperation(value = "修改", notes = "通过id修改")
-    @PreAuthorize("(hasRole('admin') or hasAuthority('admin')) and #param.id>0 ")
+    @PreAuthorize("(@el.check('user:update') or hasRole('admin') or hasAuthority('admin')) and #param.id>0 ")
     public R update(@RequestBody SysUser param) {
         sysUserService.updateById(param);
 
@@ -100,7 +100,7 @@ public class SysUserController {
      */
     @PostMapping("delete")
     @ApiOperation(value = "删除", notes = "通过ids删除")
-    @PreAuthorize("hasRole('admin') or hasAuthority('admin')")
+    @PreAuthorize("@el.check('user:delete') or hasRole('admin') or hasAuthority('admin')")
     public R delete(@RequestBody List<Long> idList) {
         sysUserService.removeByIds(idList);
         return R.ok();

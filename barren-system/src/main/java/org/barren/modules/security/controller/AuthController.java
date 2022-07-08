@@ -98,6 +98,8 @@ public class AuthController {
             response = restTemplate.postForEntity(url, new HttpEntity<>(body, header), Map.class);
             // 请求转发，返回值处理很麻烦
             // request.getRequestDispatcher("/oauth/token").forward(request, response);
+            // TODO 查询菜单权限标识数组，保存到Redis中，key=USER:PERMISSIONS:{id}
+
         } catch (Exception e) {
             log.error(" login error: ", e);
             return R.fail(401, e.getMessage());
@@ -132,6 +134,9 @@ public class AuthController {
         // 获取用户认证信息 org.springframework.security.core.userdetails.UserDetails
         // UserJwt user = (UserJwt) (SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         UserInfo currentUser = AuthUtil.getCurrentUser();
+
+        // TODO 菜单权限从Redis中获取
+
 
         return R.ok(currentUser);
     }
