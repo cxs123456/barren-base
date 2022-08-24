@@ -13,6 +13,8 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 
 /**
  * Redis 配置类
+ *  `@Cacheable：添加/使用缓存 `
+ *  `@CacheEvict：删除缓存 `
  *
  * @author cxs
  **/

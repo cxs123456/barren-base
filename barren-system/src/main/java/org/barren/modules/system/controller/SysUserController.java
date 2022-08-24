@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * <p>
@@ -74,10 +75,9 @@ public class SysUserController {
 
     @PostMapping("update")
     @ApiOperation(value = "修改", notes = "通过id修改")
-    @PreAuthorize("(@el.check('user:update') or hasRole('admin') or hasAuthority('admin')) and #param.id>0 ")
+    @PreAuthorize("(@el.check('user:update') or hasRole('admin') or hasAuthority('admin')) and #param.id>0 and 3*T(java.lang.Math).PI>9")
     public R update(@RequestBody SysUser param) {
         sysUserService.updateById(param);
-
         List<Long> roleIds = param.getRoleIds();
         if (CollectionUtils.isNotEmpty(roleIds)) {
             Long id = param.getId();
