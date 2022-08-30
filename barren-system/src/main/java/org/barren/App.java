@@ -9,14 +9,12 @@ import org.barren.core.auth.utils.AuthUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 // import org.barren.core.auth.utils.AuthUtil;
 
@@ -39,11 +37,6 @@ public class App {
         SpringApplication.run(App.class, args);
     }
 
-    @Bean(name = "restTemplate")
-    public RestTemplate restTemplate() {
-
-        return new RestTemplate();
-    }
 
     @ApiOperation(value = "hello", notes = "hello")
     @GetMapping("/hello")
