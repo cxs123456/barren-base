@@ -7,12 +7,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Objects;
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 自定义实现spring的全局异常解析器 HandlerExceptionResolver
@@ -50,21 +55,23 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理所有接口数据验证异常
+     * 处理所有接口数据验证异常，比如{@link Valid} 和 {@link Validated} 效验的参数异常。
      *
      * @param e
      * @return
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public R handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        // 打印堆栈信息
+        // 打印错误日志
         log.error("handleMethodArgumentNotValidException", e);
-        String[] str = Objects.requireNonNull(e.getBindingResult().getAllErrors().get(0).getCodes())[1].split("\\.");
-        String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        String msg = "不能为空";
-        if (msg.equals(message)) {
-            message = str[1] + ":" + message;
-        }
-        return R.fail(HttpStatus.BAD_REQUEST.value(), message);
+        StringBuilder msg = new StringBuilder();
+        BindingResult result = e.getBindingResult();
+        List<ObjectError> errors = result.getAllErrors();
+        errors.forEach(err -> {
+            FieldError fieldError = (FieldError) err;
+            log.warn("Bad Request Parameters: dto entity [{}],field [{}],message [{}]", fieldError.getObjectName(), fieldError.getField(), fieldError.getDefaultMessage());
+            msg.append(fieldError.getDefaultMessage());
+        });
+        return R.fail(HttpStatus.BAD_REQUEST.value(), msg.toString());
     }
 }
