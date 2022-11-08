@@ -73,7 +73,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
         // 默认不拦截/token/**下的路径，下面不必配置
         // http.antMatcher("/oauth/**").authorizeRequests().antMatchers("/oauth/**").permitAll().and().csrf().disable();
-        // 将自定义的过滤器添加到Spring Security 过滤器链中
+        // 将自定义的过滤器添加到Spring Security 过滤器链中，并指定在什么过滤器之后，addFilterBefore是指定在之前
         // http.addFilterAfter(new TokenFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterAfter(new TokenRenewFilter(tokenStore, jwtAccessTokenConverter, properties), BasicAuthenticationFilter.class);
     }

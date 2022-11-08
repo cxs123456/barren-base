@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -77,6 +78,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 此处不要禁止formLogin,code模式测试需要开启表单登陆,
         // 并且/oauth/token不要放开或放入下面ignoring,因为获取token首先需要登陆状态
         http.csrf().disable()
+                .sessionManagement()// 基于token，所以不需要session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 无状态
+                .and()
                 // 限制基于Request请求访问
                 .authorizeRequests()
                 // 配置地址放行 oauth/**接口对外开放
@@ -85,6 +89,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/captcha").permitAll()
                 .antMatchers("/auth/login").permitAll()
                 .antMatchers("/demo/anyone").permitAll()
+                .antMatchers(HttpMethod.OPTIONS).permitAll() //跨域请求会先进行一次options请求
                 // 其他请求都需要经过验证
                 .anyRequest().authenticated()
                 // 启用Http基本身份验证
