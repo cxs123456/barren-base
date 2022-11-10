@@ -1,4 +1,4 @@
-package org.barren.modules.security.entity;
+package org.barren.modules.security.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,12 +14,15 @@ import java.io.Serializable;
 @ApiModel(value = "登录请求实体", description = "登录请求实体")
 public class LoginRequest implements Serializable {
 
+    @NotBlank
     @ApiModelProperty(value = "用户名")
     private String username;
 
+    @NotBlank
     @ApiModelProperty(value = "密码")
     private String password;
 
+    @NotBlank
     @ApiModelProperty(value = "图片验证码，计算值")
     private String code;
 

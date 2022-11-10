@@ -12,7 +12,7 @@ import org.barren.core.auth.properties.AuthProperties;
 import org.barren.core.auth.utils.AuthUtil;
 import org.barren.core.auth.utils.UserInfo;
 import org.barren.core.tool.http.R;
-import org.barren.modules.security.entity.LoginRequest;
+import org.barren.modules.security.model.LoginRequest;
 import org.barren.modules.system.entity.SysUser;
 import org.barren.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class AuthController {
 
     @ApiOperation("登录授权")
     @RequestMapping(value = "/login", method = {RequestMethod.POST})
-    public R<Object> login(@RequestBody LoginRequest loginRequest) {
+    public R<Object> login(@Valid @RequestBody LoginRequest loginRequest) {
         String codeKey = loginRequest.getCodeKey();
         String code = loginRequest.getCode();
         if (StringUtils.isAnyBlank(code, codeKey)) {
