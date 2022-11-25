@@ -9,6 +9,7 @@ import org.barren.core.auth.utils.AuthUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,7 @@ public class App {
 
     @ApiOperation(value = "hello", notes = "hello")
     @GetMapping("/hello")
-    public String hello(@RequestHeader("Authorization") String token) {
+    public String hello(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         String atoken = token.split(" ")[1];
         JSONObject decode = AuthUtil.decode(atoken);
         log.info("token json = {}", decode);

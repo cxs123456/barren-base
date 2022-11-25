@@ -12,8 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Author: XChen@fintechautomation.com
- * @Created: 2022/8/30
+ * @author cxs
  **/
 @Configuration
 public class RestTemplateConfig {

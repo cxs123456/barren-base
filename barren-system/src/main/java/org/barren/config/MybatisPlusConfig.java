@@ -27,6 +27,8 @@ public class MybatisPlusConfig {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         // 添加分页插件
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        // 启用多租户插件
+        // interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new MyTenantLineHandlerImpl()));
         return interceptor;
     }
 

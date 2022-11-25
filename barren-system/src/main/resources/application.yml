@@ -42,7 +42,16 @@ spring:
   messages:
     basename: i18n/messages
     encoding: UTF-8
-
+  # springboot 默认线程线配置，适用 @Async
+  task:
+    execution:
+      pool:
+        core-size: 10
+        max-size: 15
+        queue-capacity: 1024
+      thread-name-prefix: task-
+    scheduling:
+      thread-name-prefix: scheduling-
 
 # mybatis-plus 配置
 mybatis-plus:
@@ -66,7 +75,6 @@ mybatis-plus:
       # 逻辑未删除全局值（0表示未删除，这也是Mybatis Plus的默认配置）
       logic-not-delete-value: 0
       logic-delete-field: delFlag
-
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
