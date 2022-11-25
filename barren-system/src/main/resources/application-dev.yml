@@ -1,54 +1,50 @@
 #配置数据源
 spring:
   datasource:
-    druid:
-      db-type: com.alibaba.druid.pool.DruidDataSource
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:barren}?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
-      username: ${DB_USER:root}
-      password: ${DB_PWD:123456}
-      # 初始连接数
-      initial-size: 5
-      # 最小连接数
-      min-idle: 15
-      # 最大连接数
-      max-active: 30
-      # 获取连接超时时间
-      max-wait: 5000
-      # 连接有效性检测时间
-      time-between-eviction-runs-millis: 60000
-      # 连接在池中最小生存的时间
-      min-evictable-idle-time-millis: 300000
-      # 连接在池中最大生存的时间
-      max-evictable-idle-time-millis: 900000
-      # 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除
-      test-while-idle: true
-      # 指明是否在从池中取出连接前进行检验,如果检验失败, 则从池中去除连接并尝试取出另一个
-      test-on-borrow: true
-      # 是否在归还到池中前进行检验
-      test-on-return: false
-      # 检测连接是否有效
-      validation-query: select 1
-      # 配置监控统计
-      webStatFilter:
-        enabled: true
-      stat-view-servlet:
-        enabled: true
-        # 控制台管理用户名和密码
-        url-pattern: /druid/*
-        reset-enable: false
-        login-username: admin
-        login-password: 123456
-      filter:
-        stat:
-          enabled: true
-          # 记录慢SQL
-          log-slow-sql: true
-          slow-sql-millis: 1000
-          merge-sql: true
+    # 多数据源配置
+    dynamic:
+      primary: master #设置默认的数据源或者数据源组,默认值即为master
+      strict: false #严格匹配数据源,默认false. true未匹配到指定数据源时抛异常,false使用默认数据源
+      lazy: true # 懒加载数据源
+      datasource:
+        master:
+          url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:barren}?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
+          username: ${DB_USER:root}
+          password: ${DB_PWD:123456}
+          driver-class-name: com.mysql.cj.jdbc.Driver
+        slave_1:
+          url: jdbc:mysql://127.0.0.1:3306/db?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+      druid:
+        # 初始连接数
+        initial-size: 5
+        # 最小连接数
+        min-idle: 15
+        # 最大连接数
+        max-active: 30
+        # 获取连接超时时间
+        max-wait: 5000
+        # 连接有效性检测时间
+        time-between-eviction-runs-millis: 60000
+        # 连接在池中最小生存的时间
+        min-evictable-idle-time-millis: 300000
+        # 连接在池中最大生存的时间
+        max-evictable-idle-time-millis: 900000
+        # 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除
+        test-while-idle: true
+        # 指明是否在从池中取出连接前进行检验,如果检验失败, 则从池中去除连接并尝试取出另一个
+        test-on-borrow: true
+        # 是否在归还到池中前进行检验
+        test-on-return: false
+        # 检测连接是否有效
+        validation-query: select 1
         wall:
-          config:
-            multi-statement-allow: true
+          comment-allow: true
+          none-base-statement-allow: true
+          variant-check: false
+          multi-statement-allow: true
 
 # 启用knife
 knife4j:
