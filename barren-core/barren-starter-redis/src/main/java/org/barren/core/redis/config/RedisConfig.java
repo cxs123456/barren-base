@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -82,8 +83,10 @@ public class RedisConfig {
      *
      * @return
      */
+    @Lazy // 用到的时候才创建
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redissonClient() {
+
         Config config = new Config();
         String url = "redis://" + redisProperties.getHost() + ":" + redisProperties.getPort();
         config.useSingleServer().setAddress(url)
