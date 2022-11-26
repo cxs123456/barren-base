@@ -51,7 +51,9 @@ spring:
         queue-capacity: 1024
       thread-name-prefix: task-
     scheduling:
-      thread-name-prefix: scheduling-
+      thread-name-prefix: task-scheduling-
+      pool:
+        size: 10
 
 # mybatis-plus 配置
 mybatis-plus:
