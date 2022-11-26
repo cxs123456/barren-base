@@ -46,6 +46,7 @@
         <hutool.version>5.7.22</hutool.version>
         <guava.version>31.1-jre</guava.version>
         <okhttp.version>4.10.0</okhttp.version>
+        <redisson.version>3.16.8</redisson.version>
     </properties>
 
     <dependencyManagement>
@@ -159,6 +160,11 @@
                 <version>${guava.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>

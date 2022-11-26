@@ -1,6 +1,11 @@
 package org.barren.core.redis.config;
 
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,14 +18,18 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 
 /**
  * Redis 配置类
- *  `@Cacheable：添加/使用缓存 `
- *  `@CacheEvict：删除缓存 `
+ * `@Cacheable：添加/使用缓存 `
+ * `@CacheEvict：删除缓存 `
  *
  * @author cxs
  **/
 @Configuration
 @EnableCaching
 public class RedisConfig {
+
+    @Autowired
+    private RedisProperties redisProperties;
+
     /**
      * 创建 RedisTemplate Bean，使用 JSON 序列化方式
      */
@@ -40,7 +49,7 @@ public class RedisConfig {
 
     /**
      * RedisCacheConfiguration Bean
-     *
+     * <p>
      * 参考 org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration 的 createConfiguration 方法
      */
     @Bean
@@ -65,6 +74,23 @@ public class RedisConfig {
             config = config.disableKeyPrefix();
         }
         return config;
+    }
+
+
+    /**
+     * RedissonClient config 分布式锁
+     *
+     * @return
+     */
+    @Bean(destroyMethod = "shutdown")
+    public RedissonClient redissonClient() {
+        Config config = new Config();
+        String url = "redis://" + redisProperties.getHost() + ":" + redisProperties.getPort();
+        config.useSingleServer().setAddress(url)
+                .setDatabase(redisProperties.getDatabase());
+        //.setPassword(redisProperties.getPassword());// 没有密码不需要设置
+        RedissonClient redissonClient = Redisson.create(config);
+        return redissonClient;
     }
 
 }

@@ -13,7 +13,7 @@
 
     <dependencies>
 
-        <!-- spring-boot-starter-data-redis 和 spring-boot-starter-redis 区别， 前者使用jedis，后者使用了lettuce-->
+        <!-- spring-boot-starter-redis 和 spring-boot-starter-data-redis 区别， 前者使用jedis，后者使用了lettuce-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -22,6 +22,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
         </dependency>
 
     </dependencies>
