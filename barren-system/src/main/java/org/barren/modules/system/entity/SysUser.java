@@ -104,5 +104,9 @@ public class SysUser implements Serializable {
     @TableField("remark")
     private String remark;
 
+    @ApiModelProperty("租户id")
+    @TableField("tenant_id")
+    private Long tenantId;
+
 
 }

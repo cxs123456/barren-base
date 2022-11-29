@@ -66,13 +66,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             List<SysUserRole> userRoleList = userRoleService.list(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId, userId));
             if (CollectionUtils.isNotEmpty(userRoleList)) {
                 List<Long> roleIds = userRoleList.stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
-                // 2.查询 角色菜单列表，获取菜单， TODO 菜单按钮权限字符标识数据保存Redis中，从Redis中获取
+                // 2.查询 角色菜单列表，获取菜单， TODO 菜单按钮权限字符标识数据保存Redis中，从 Redis 中获取
                 List<SysRoleMenu> roleMenuList = roleMenuService.list(Wrappers.<SysRoleMenu>lambdaQuery().in(SysRoleMenu::getRoleId, roleIds));
                 if (CollectionUtils.isNotEmpty(roleMenuList)) {
                     List<Long> menuIds = roleMenuList.stream().map(SysRoleMenu::getMenuId).collect(Collectors.toList());
                     // 查询目录，菜单，按钮
                     List<SysMenu> menuList = menuService.list((Wrappers.<SysMenu>lambdaQuery().in(SysMenu::getId, menuIds)));
                     permissions = menuList.stream().map(SysMenu::getPermission).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+                    // TODO 权限字符标识数据保存 Redis 中
                 }
             }
         }
@@ -82,6 +83,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userDetails.setNickname(user.getNickName());
         userDetails.setId(user.getId());
         userDetails.setPhone(user.getPhone());
+        userDetails.setTenantId(user.getTenantId());
         userDetails.setRoles(permissions);
         return userDetails;
     }

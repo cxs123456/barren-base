@@ -100,6 +100,10 @@ auth:
   jwt-config:
     detect: 1200
 
-
+# 多租户配置
+tenant:
+  enabled: true
+  column: tenant_id
+  exclude-tables: [ "sys_tenant", "sys_menu", "sys_dict", "sys_dict","sys_notice" ]
 
 

@@ -106,6 +106,12 @@
 
             <dependency>
                 <groupId>org.barren</groupId>
+                <artifactId>barren-starter-tenant</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.barren</groupId>
                 <artifactId>barren-starter-oss</artifactId>
                 <version>${revision}</version>
             </dependency>

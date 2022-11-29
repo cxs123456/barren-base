@@ -12,48 +12,64 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 系统角色表
+ * 租户表
  * </p>
  *
  * @author cxs
- * @since 2022-06-29
+ * @since 2022-11-29
  */
 @Getter
 @Setter
 @Accessors(chain = true)
-@TableName("sys_role")
-@ApiModel(value = "SysRole对象", description = "系统角色表")
-public class SysRole implements Serializable {
+@TableName("sys_tenant")
+@ApiModel(value = "SysTenant对象", description = "租户表")
+public class SysTenant implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("ID")
+    @ApiModelProperty("租户id")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty("角色名称")
+    @ApiModelProperty("租户名")
     @TableField("name")
     private String name;
 
-    @ApiModelProperty("角色权限字符")
-    @TableField("code")
-    private String code;
+    @ApiModelProperty("联系人的用户id")
+    @TableField("contact_user_id")
+    private Long contactUserId;
 
-    @ApiModelProperty("角色类型")
-    @TableField("type")
-    private Integer type;
+    @ApiModelProperty("联系人")
+    @TableField("contact_name")
+    private String contactName;
 
-    @ApiModelProperty("角色级别")
-    @TableField("level")
-    private Integer level;
+    @ApiModelProperty("联系手机号")
+    @TableField("contact_phone")
+    private String contactPhone;
 
-    @ApiModelProperty("顺序")
-    @TableField("sort")
-    private Integer sort;
+    @ApiModelProperty("联系地址")
+    @TableField("address")
+    private String address;
 
-    @ApiModelProperty("数据范围（0-全部数据权限 1-自定数据权限 2-本部门数据权限 3-本部门及以下数据权限）")
-    @TableField("data_scope")
-    private Integer dataScope;
+    @ApiModelProperty("绑定域名")
+    @TableField("domain")
+    private String domain;
+
+    @ApiModelProperty("租户套餐编号")
+    @TableField("package_id")
+    private Long packageId;
+
+    @ApiModelProperty("过期时间")
+    @TableField("expire_time")
+    private LocalDateTime expireTime;
+
+    @ApiModelProperty("账号数量")
+    @TableField("account_count")
+    private Integer accountCount;
+
+    @ApiModelProperty("授权码")
+    @TableField("license_key")
+    private String licenseKey;
 
     @ApiModelProperty("创建人")
     @TableField(value = "create_user", fill = FieldFill.INSERT)
@@ -71,6 +87,10 @@ public class SysRole implements Serializable {
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
+    @ApiModelProperty("帐号状态，1启用 0停用")
+    @TableField("status")
+    private Integer status;
+
     @ApiModelProperty("删除标志，0正常 1删除")
     @TableField("del_flag")
     private Integer delFlag;
@@ -79,7 +99,5 @@ public class SysRole implements Serializable {
     @TableField("remark")
     private String remark;
 
-    @ApiModelProperty("租户id")
-    @TableField("tenant_id")
-    private Long tenantId;
+
 }

@@ -23,7 +23,7 @@ public class Demo {
         String a = "/" + null;
         System.out.println(a);
 
-
+        log.error(" getInstitution error. institutionId={}", 1111, new Exception("1111"));
     }
 
     @Test

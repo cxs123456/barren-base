@@ -102,7 +102,7 @@ public class CodeGenerator {
         String modulePath = "/barren-generator";
         String projectPath = System.getProperty("user.dir") + modulePath;
         CodeGenerator codeGenerator = new CodeGenerator();
-        codeGenerator.setTable(new String[]{"sys_user"});
+        codeGenerator.setTable(new String[]{"sys_tenant"});
         codeGenerator.setModuleName("system");
         // codeGenerator.setOutputDir(projectPath + "/src/test/java");
         // codeGenerator.setMapperPath(projectPath + "/src/test/resources/mapper/");

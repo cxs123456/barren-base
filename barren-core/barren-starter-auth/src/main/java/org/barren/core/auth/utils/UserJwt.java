@@ -18,6 +18,7 @@ public class UserJwt extends User {
     private Long id;    //用户ID
     private String phone;  //用户电话号码
     private String nickname;  //用户昵称
+    private Long tenantId;  //租户id
     private List<String> roles;
 
     public UserJwt(String username, String password, Collection<? extends GrantedAuthority> authorities) {

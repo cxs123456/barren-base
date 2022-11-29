@@ -15,6 +15,7 @@
         <module>barren-starter-redis</module>
         <module>barren-starter-auth</module>
         <module>barren-starter-web</module>
+        <module>barren-starter-tenant</module>
     </modules>
     <packaging>pom</packaging>
 
