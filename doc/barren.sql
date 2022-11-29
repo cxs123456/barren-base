@@ -11,11 +11,34 @@
  Target Server Version : 50736
  File Encoding         : 65001
 
- Date: 27/06/2022 22:08:08
+ Date: 29/11/2022 08:16:53
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for dynamic_datasource_instance
+-- ----------------------------
+DROP TABLE IF EXISTS `dynamic_datasource_instance`;
+CREATE TABLE `dynamic_datasource_instance`  (
+  `id` int(9) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `driver` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '动态数据源表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of dynamic_datasource_instance
+-- ----------------------------
+INSERT INTO `dynamic_datasource_instance` VALUES (1, 'mysql', 'master', 'root', '123456', 'jdbc:mysql://127.0.0.1:3306/db?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai', 'com.mysql.cj.jdbc.Driver', '2021-12-02 09:40:29');
+INSERT INTO `dynamic_datasource_instance` VALUES (2, 'mysql', 'test', 'root', '123456', 'jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai', 'com.mysql.cj.jdbc.Driver', '2021-12-02 14:39:58');
+INSERT INTO `dynamic_datasource_instance` VALUES (3, 'mysql', 'slave1', 'root', '123456', 'jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai', 'com.mysql.cj.jdbc.Driver', '2021-12-02 14:44:25');
 
 -- ----------------------------
 -- Table structure for sys_dept
@@ -164,6 +187,7 @@ CREATE TABLE `sys_post`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `del_flag` int(2) NULL DEFAULT 0 COMMENT '删除标志，0正常 1删除',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 1 COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '岗位表' ROW_FORMAT = Dynamic;
 
@@ -189,6 +213,7 @@ CREATE TABLE `sys_role`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `del_flag` int(2) NULL DEFAULT 0 COMMENT '删除标志，0正常 1删除',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 1 COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_name`(`name`) USING BTREE,
   UNIQUE INDEX `uk_code`(`code`) USING BTREE
@@ -213,6 +238,7 @@ CREATE TABLE `sys_role_dept`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `del_flag` int(2) NULL DEFAULT 0 COMMENT '删除标志，0正常 1删除',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 1 COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色部门关联表' ROW_FORMAT = Dynamic;
 
@@ -234,16 +260,47 @@ CREATE TABLE `sys_role_menu`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `del_flag` int(2) NULL DEFAULT 0 COMMENT '删除标志，0正常 1删除',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 1 COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色菜单关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role_menu
 -- ----------------------------
-INSERT INTO `sys_role_menu` VALUES (1, 1, 1, 1, 1, '2022-06-25 14:43:45', '2022-06-25 14:43:45', 0, NULL);
-INSERT INTO `sys_role_menu` VALUES (2, 1, 2, 1, 1, '2022-06-25 14:43:53', '2022-06-25 14:43:57', 0, NULL);
-INSERT INTO `sys_role_menu` VALUES (3, 1, 3, 1, 1, '2022-06-25 14:44:08', '2022-06-25 14:44:08', 0, NULL);
-INSERT INTO `sys_role_menu` VALUES (4, 1, 4, 1, 1, '2022-06-25 14:44:18', '2022-06-25 14:44:18', 0, NULL);
+INSERT INTO `sys_role_menu` VALUES (1, 1, 1, 1, 1, '2022-07-01 18:23:34', '2022-07-01 18:23:34', 0, NULL, 1);
+INSERT INTO `sys_role_menu` VALUES (2, 1, 2, 1, 1, '2022-07-01 18:23:34', '2022-07-01 18:23:34', 0, NULL, 1);
+INSERT INTO `sys_role_menu` VALUES (3, 1, 3, 1, 1, '2022-07-01 18:23:34', '2022-07-01 18:23:34', 0, NULL, 1);
+INSERT INTO `sys_role_menu` VALUES (4, 1, 4, 1, 1, '2022-07-01 18:23:34', '2022-07-01 18:23:34', 0, NULL, 1);
+
+-- ----------------------------
+-- Table structure for sys_tenant
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_tenant`;
+CREATE TABLE `sys_tenant`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '租户id',
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '租户名',
+  `contact_user_id` bigint(20) NOT NULL COMMENT '联系人的用户id',
+  `contact_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '联系人',
+  `contact_phone` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '联系手机号',
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系地址',
+  `domain` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '绑定域名',
+  `package_id` bigint(20) NULL DEFAULT NULL COMMENT '租户套餐编号',
+  `expire_time` datetime NOT NULL COMMENT '过期时间',
+  `account_count` int(11) NULL DEFAULT NULL COMMENT '账号数量',
+  `license_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '授权码',
+  `create_user` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `update_user` bigint(20) NULL DEFAULT NULL COMMENT '修改人',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `status` int(2) NULL DEFAULT 1 COMMENT '帐号状态，1启用 0停用',
+  `del_flag` int(2) NULL DEFAULT 0 COMMENT '删除标志，0正常 1删除',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '租户表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_tenant
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -256,7 +313,7 @@ CREATE TABLE `sys_user`  (
   `nick_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '昵称',
   `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '手机号',
   `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '邮箱',
-  `sex` int(2) NULL DEFAULT NULL COMMENT '性别',
+  `sex` int(2) NULL DEFAULT NULL COMMENT '性别，1-男，2-女',
   `is_admin` bit(1) NULL DEFAULT b'0' COMMENT '是否为admin账号',
   `avatar` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '头像地址',
   `login_ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后登录IP',
@@ -268,6 +325,7 @@ CREATE TABLE `sys_user`  (
   `status` int(2) NULL DEFAULT 1 COMMENT '帐号状态，1启用 0停用',
   `del_flag` int(2) NULL DEFAULT 0 COMMENT '删除标志，0正常 1删除',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_name`(`username`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统用户表' ROW_FORMAT = Dynamic;
@@ -275,7 +333,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '$2a$10$4FEpAsiNP7No0.qUiYO4A.48ulpCiGT/BQKBSnLdpCFeceZBSOvCW', '管理员', '18888888888', '123456@qq.com', 1, b'1', NULL, '127.0.0.1', '2022-06-25 14:28:18', 1, 1, '2022-06-25 14:20:50', '2022-06-25 14:28:47', 1, 0, '密码123456');
+INSERT INTO `sys_user` VALUES (1, 'admin', '$2a$10$xtNLa.iNYJY8fXPVzZRwPelORdGRZ7015AXF75td/trG4dn7HW3VG', '管理员', '18888888888', '123456@qq.com', 1, b'1', NULL, '127.0.0.1', '2022-06-25 14:28:18', 1, 1, '2022-06-25 14:20:50', '2022-11-29 03:08:18', 1, 0, '密码123456', 1);
 
 -- ----------------------------
 -- Table structure for sys_user_post
@@ -291,6 +349,7 @@ CREATE TABLE `sys_user_post`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `del_flag` int(2) NULL DEFAULT 0 COMMENT '删除标志，0正常 1删除',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 1 COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户岗位关联表' ROW_FORMAT = Dynamic;
 
@@ -312,12 +371,13 @@ CREATE TABLE `sys_user_role`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `del_flag` int(2) NULL DEFAULT 0 COMMENT '删除标志，0正常 1删除',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 1 COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户角色关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user_role
 -- ----------------------------
-INSERT INTO `sys_user_role` VALUES (1, 1, 1, 1, 1, '2022-06-25 14:43:15', '2022-06-25 14:43:15', 0, NULL);
+INSERT INTO `sys_user_role` VALUES (1, 1, 1, 1, 1, '2022-06-25 14:43:15', '2022-06-25 14:43:15', 0, NULL, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;

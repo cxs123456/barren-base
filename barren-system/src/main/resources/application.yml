@@ -102,7 +102,7 @@ auth:
 
 # 多租户配置
 tenant:
-  enabled: true
+  enabled: false
   column: tenant_id
   exclude-tables: [ "sys_tenant", "sys_menu", "sys_dict", "sys_dict","sys_notice" ]
 
