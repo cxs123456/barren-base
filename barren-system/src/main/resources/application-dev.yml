@@ -46,6 +46,12 @@ spring:
           variant-check: false
           multi-statement-allow: true
 
+mybatis-plus:
+  configuration:
+    # 打印SQL
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    call-setters-on-nulls: false
+
 # 启用knife
 knife4j:
   enable: true

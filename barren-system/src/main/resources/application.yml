@@ -82,6 +82,7 @@ mybatis-plus:
     cache-enabled: false
     # 打印SQL
     # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    call-setters-on-nulls: false
 
 
 auth:
