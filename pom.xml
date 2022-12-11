@@ -47,6 +47,14 @@
         <guava.version>31.1-jre</guava.version>
         <okhttp.version>4.10.0</okhttp.version>
         <redisson.version>3.16.8</redisson.version>
+
+        <!-- 推荐使用Harbor 或者 Nexus3 -->
+        <docker.registry.url>192.168.0.157</docker.registry.url>
+        <docker.registry.host>http://${docker.registry.url}:2375</docker.registry.host>
+        <docker.username>admin</docker.username>
+        <docker.password>12345</docker.password>
+        <docker.namespace>barren_repository</docker.namespace>
+        <docker.plugin.version>1.4.13</docker.plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -395,15 +403,97 @@
     </dependencies>
 
     <build>
+        <!--如果要添加在源码包（src/main/java）下的资源文件，如下配置
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>-->
+        <pluginManagement>
+            <plugins>
+                <!-- 打包构建docker镜像，docker-maven-plugin 插件有cve漏洞，用下面这个-->
+                <plugin>
+                    <groupId>com.spotify</groupId>
+                    <artifactId>dockerfile-maven-plugin</artifactId>
+                    <version>${docker.plugin.version}</version>
+                    <configuration>
+                        <!-- 指定docker镜像的repo名字-->
+                        <repository>${docker.registry.url}/${docker.namespace}/${project.artifactId}</repository>
+                        <username>${docker.username}</username>
+                        <password>${docker.password}</password>
+
+                        <tag>${project.version}</tag>
+                        <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+                        <buildArgs>
+                            <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                        </buildArgs>
+                    </configuration>
+                    <!--添加如下配置，运行 mvn install 命令便会自动打包镜像-->
+                    <executions>
+                        <execution>
+                            <id>default</id>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>build</goal> <!-- 构建docker镜像库-->
+                                <goal>push</goal> <!-- 推送到docker镜像库-->
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.6.8</version>
+                <!--<version>2.6.8</version>-->
                 <configuration>
                     <fork>true</fork>
+                    <!--开启分层编译支持，默认是开启的-->
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
                 </configuration>
             </plugin>
+
+            <!-- docker镜像插件
+            <plugin>
+               <groupId>com.spotify</groupId>
+               <artifactId>dockerfile-maven-plugin</artifactId>
+           </plugin>-->
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>aliyun-repos</id>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <!--<repository>
+            <id>blade-release</id>
+            <name>Release Repository</name>
+            <url>http://nexus.bladex.vip/repository/maven-releases/</url>
+        </repository>-->
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun-plugin</id>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
