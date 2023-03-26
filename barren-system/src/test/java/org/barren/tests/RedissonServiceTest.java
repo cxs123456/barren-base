@@ -1,6 +1,9 @@
 package org.barren.tests;
 
 import lombok.extern.slf4j.Slf4j;
+import org.barren.modules.demo.service.DemoService;
+import org.barren.modules.system.entity.SysTenant;
+import org.barren.modules.system.entity.SysUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,9 +30,50 @@ public class RedissonServiceTest {
     @Autowired
     private RedissonClient redissonClient;
 
+    @Autowired
+    private DemoService demoService;
+
     @BeforeEach
     void setUp() throws IOException {
 
+    }
+
+
+    @Test
+    void testRedissonLock() throws InterruptedException {
+        Thread t0 = new Thread(() -> {
+            try {
+                lockObj("lock_a", 1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        Thread t1 = new Thread(() -> {
+            try {
+                lockObj("lock_a", 1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+            try {
+                lockObj("lock_a", 4);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        t0.start();
+        Thread.sleep(1000);
+        t1.start();
+        t2.start();
+
+        t0.join();
+        t1.join();
+        t2.join();
+        System.out.println("exec finish...");
     }
 
 
@@ -97,17 +141,18 @@ public class RedissonServiceTest {
 
     public void lockObj(String lockKey, long waitTime) throws InterruptedException {
         RLock lock = redissonClient.getLock(lockKey);
+        String currentThreadName = Thread.currentThread().getName();
         if (lock.tryLock(waitTime, TimeUnit.SECONDS)) {
             try {
-                System.out.println("1. get " + lockKey + " ...");
+                System.out.println(" ThreadName=" + currentThreadName + " get lock " + lockKey + " ...");
                 Thread.sleep(2000);
             } finally {
                 lock.unlock();
-                System.out.println("1. " + lockKey + " is unlock ...");
+                System.out.println(" ThreadName=" + currentThreadName + " release lock" + lockKey + "...");
             }
 
         } else {
-            System.out.println("1.Can't get " + lockKey + " ...");
+            System.out.println(" ThreadName=" + currentThreadName + " Can't get " + lockKey + " ...");
         }
     }
 
@@ -129,5 +174,77 @@ public class RedissonServiceTest {
     // public void lockC() throws InterruptedException {
     //     RLock lock = redissonClient.getLock("lock_c");
     // }
+
+    @Test
+    void testAnnotationLock() throws InterruptedException {
+        SysUser user = new SysUser();
+        user.setId(123L);
+        SysTenant tenant  =new SysTenant();
+        tenant.setId(111L);
+        Thread t0 = new Thread(() -> {
+            try {
+                String currentThreadName = Thread.currentThread().getName();
+                System.out.println(" ThreadName=" + currentThreadName + " try lock user=" + 123 + " ...");
+                demoService.lockUser(user);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        Thread t1 = new Thread(() -> {
+            try {
+                String currentThreadName = Thread.currentThread().getName();
+                System.out.println(" ThreadName=" + currentThreadName + " try lock user=" + 123 + " ...");
+                demoService.lockUser(user);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+            try {
+                String currentThreadName = Thread.currentThread().getName();
+                System.out.println(" ThreadName=" + currentThreadName + " try lock user=" + 123 + " ...");
+                demoService.lockUser(user);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        Thread t3 = new Thread(() -> {
+            try {
+                String currentThreadName = Thread.currentThread().getName();
+                System.out.println(" ThreadName=" + currentThreadName + " try lock tenant=" + 111 + " ...");
+                demoService.lockTenant(tenant);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        Thread t4 = new Thread(() -> {
+            try {
+                String currentThreadName = Thread.currentThread().getName();
+                System.out.println(" ThreadName=" + currentThreadName + " try lock tenant=" + 111 + " ...");
+                demoService.lockTenant(tenant);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        t0.start();
+        // Thread.sleep(1000);
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+
+
+        t0.join();
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
+        System.out.println("exec finish...");
+    }
+
 
 }
