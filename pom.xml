@@ -42,7 +42,7 @@
         <druid.version>1.2.11</druid.version>
         <log4jdbc.version>1.16</log4jdbc.version>
         <knife4j.version>3.0.3</knife4j.version>
-        <fastjson.version>1.2.78</fastjson.version>
+        <fastjson.version>2.0.32</fastjson.version>
         <hutool.version>5.7.22</hutool.version>
         <guava.version>31.1-jre</guava.version>
         <okhttp.version>4.10.0</okhttp.version>
@@ -325,8 +325,8 @@
 
         <!-- alibaba fastjson-->
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
             <version>${fastjson.version}</version>
         </dependency>
 

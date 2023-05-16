@@ -1,6 +1,5 @@
 package org.barren.core.redis.lock.aop;
 
-import com.fintech_automation.accloudscheduler.config.redisson.lock.annotation.DistributedLock;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -8,6 +7,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.barren.core.redis.lock.annotation.DistributedLock;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeansException;
@@ -44,7 +44,7 @@ public class DistributedLockAspect implements BeanFactoryAware {
     @Autowired
     private RedissonClient redissonClient;
 
-    @Pointcut("@annotation(com.fintech_automation.accloudscheduler.config.redisson.lock.annotation.DistributedLock)")
+    @Pointcut("@annotation(org.barren.core.redis.lock.annotation.DistributedLock)")
     public void pointCut() {
 
     }

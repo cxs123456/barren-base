@@ -32,6 +32,15 @@ import java.time.format.DateTimeFormatter;
 // @EnableWebMvc // 千万别加，否则spring boot 内置 mvc自动配置失效
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    // 注册拦截器
+    // @Override
+    // public void addInterceptors(InterceptorRegistry registry) {
+    //     // 注册 Sa-Token 拦截器，校验规则为 StpUtil.checkLogin() 登录校验。
+    //     registry.addInterceptor(new SaInterceptor(handle -> StpUtil.checkLogin()))
+    //             .addPathPatterns("/**")
+    //             .excludePathPatterns("/user/doLogin");
+    // }
+
     /**
      * 配置 cors 前端跨域
      *
