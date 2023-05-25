@@ -47,6 +47,7 @@
         <guava.version>31.1-jre</guava.version>
         <okhttp.version>4.10.0</okhttp.version>
         <redisson.version>3.16.8</redisson.version>
+        <easyexcel.version>3.3.1</easyexcel.version>
 
         <!-- 推荐使用Harbor 或者 Nexus3 -->
         <docker.registry.url>192.168.0.157</docker.registry.url>
@@ -179,6 +180,14 @@
                 <artifactId>redisson</artifactId>
                 <version>${redisson.version}</version>
             </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.alibaba/easyexcel -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>
