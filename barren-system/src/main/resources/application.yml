@@ -1,5 +1,10 @@
 server:
   port: 8000
+  tomcat:
+    max-http-form-post-size: -1 # HTTP post request size limit
+  servlet:
+    encoding:
+      charset: utf-8
 
 spring:
   application:
