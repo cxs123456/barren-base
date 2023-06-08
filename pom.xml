@@ -35,9 +35,9 @@
         <spring.cloud.version>2021.0.3</spring.cloud.version>
         <spring.platform.version>Cairo-SR8</spring.platform.version>
 
-        <mybatis-plus.version>3.5.1</mybatis-plus.version>
-        <mybatis-plus-generator.version>3.5.1</mybatis-plus-generator.version>
-        <mybatis-plus-dynamic-datasource.version>3.5.1</mybatis-plus-dynamic-datasource.version>
+        <mybatis-plus.version>3.5.3</mybatis-plus.version>
+        <mybatis-plus-generator.version>3.5.2</mybatis-plus-generator.version>
+        <mybatis-plus-dynamic-datasource.version>3.5.2</mybatis-plus-dynamic-datasource.version>
 
         <druid.version>1.2.11</druid.version>
         <log4jdbc.version>1.16</log4jdbc.version>
