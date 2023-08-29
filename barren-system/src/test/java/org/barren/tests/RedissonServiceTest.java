@@ -246,5 +246,9 @@ public class RedissonServiceTest {
         System.out.println("exec finish...");
     }
 
+    @Test
+    void testAopContext() throws InterruptedException {
 
+        demoService.testAopContext();
+    }
 }

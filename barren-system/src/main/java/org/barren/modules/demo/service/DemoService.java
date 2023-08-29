@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.barren.core.redis.lock.annotation.DistributedLock;
 import org.barren.modules.system.entity.SysTenant;
 import org.barren.modules.system.entity.SysUser;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,5 +42,14 @@ public class DemoService {
         System.out.println(" ThreadName=" + currentThreadName + " get tenantId =" + tenantId + " ...");
         Thread.sleep(2000);
         System.out.println(" ThreadName=" + currentThreadName + " release tenantId =" + tenantId + " ...");
+    }
+
+    /**
+     * 测试 {@link AopContext#currentProxy()} 获取当前类的代理对象
+     * @throws InterruptedException
+     */
+    public void testAopContext() throws InterruptedException {
+        DemoService service = (DemoService) AopContext.currentProxy();
+        service.lockInfo("abc");
     }
 }

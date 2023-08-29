@@ -16,6 +16,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.expression.MethodBasedEvaluationContext;
 import org.springframework.core.DefaultParameterNameDiscoverer;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.expression.Expression;
 import org.springframework.expression.TypedValue;
@@ -34,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Aspect
 @Component
-@Order(1) // **分布式锁释放必须事务提交之后**，分布式锁AOP先执行，切面类添加注解 `@Order(1)`，order越小最先执行最后结束。
+@Order(Ordered.HIGHEST_PRECEDENCE) // **分布式锁释放必须事务提交之后**，分布式锁AOP先执行，切面类添加注解 `@Order(1)`，order越小最先执行最后结束。
 public class DistributedLockAspect implements BeanFactoryAware {
 
     private static final SpelExpressionParser parser = new SpelExpressionParser();
