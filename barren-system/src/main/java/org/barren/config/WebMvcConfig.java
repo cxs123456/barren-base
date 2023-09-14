@@ -10,12 +10,15 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import org.barren.core.web.interceptor.IdempotentInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.LocalDate;
@@ -32,14 +35,20 @@ import java.time.format.DateTimeFormatter;
 // @EnableWebMvc // 千万别加，否则spring boot 内置 mvc自动配置失效
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    @Autowired
+    private IdempotentInterceptor idempotentInterceptor;
+
     // 注册拦截器
     // @Override
-    // public void addInterceptors(InterceptorRegistry registry) {
-    //     // 注册 Sa-Token 拦截器，校验规则为 StpUtil.checkLogin() 登录校验。
-    //     registry.addInterceptor(new SaInterceptor(handle -> StpUtil.checkLogin()))
-    //             .addPathPatterns("/**")
-    //             .excludePathPatterns("/user/doLogin");
-    // }
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 注册 Sa-Token 拦截器，校验规则为 StpUtil.checkLogin() 登录校验。
+        // registry.addInterceptor(new SaInterceptor(handle -> StpUtil.checkLogin()))
+        //         .addPathPatterns("/**")
+        //         .excludePathPatterns("/user/doLogin");
+
+
+        registry.addInterceptor(idempotentInterceptor).addPathPatterns("/**").order(1);;
+    }
 
     /**
      * 配置 cors 前端跨域
