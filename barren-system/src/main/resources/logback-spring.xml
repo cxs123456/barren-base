@@ -15,7 +15,7 @@
 
     <!-- 1.property标签用来定义变量值-->
     <!-- name的值是变量的名称，value的值时变量定义的值。通过定义的值会被插入到logger上下文中。定义后，可以使“${}”来使用变量 -->
-    <property name="log.path" value="logs" />
+    <property name="log.path" value="${LOG_BASE}" />
 
     <!-- %d{yyyy-MM-dd HH:mm:ss.SSS}——日志输出时间; $PID——进程号; %level——日志级别;
         ${LOG_LEVEL_PATTERN:-%5p}：用于呈现日志级别的格式（默认%5p）；%t-输出日志的线程名；
