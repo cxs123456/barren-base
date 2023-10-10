@@ -47,7 +47,7 @@ public class CodeGenerator {
 
         // 配置mapper.xml ,other文件的输出路径
         Map<OutputFile, String> pathInfo = new HashMap<>(4);
-        pathInfo.put(OutputFile.mapperXml, mapperPath);
+        pathInfo.put(OutputFile.xml, mapperPath);
         pathInfo.put(OutputFile.other, webPath);
 
         // 配置前端文件：api.js, index.vue
