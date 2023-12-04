@@ -11,9 +11,9 @@ import org.barren.core.redis.lock.annotation.DistributedLock;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.expression.MethodBasedEvaluationContext;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.Ordered;
@@ -36,13 +36,13 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE) // **分布式锁释放必须事务提交之后**，分布式锁AOP先执行，切面类添加注解 `@Order(1)`，order越小最先执行最后结束。
-public class DistributedLockAspect implements BeanFactoryAware {
+public class DistributedLockAspect implements ApplicationContextAware {
 
     private static final SpelExpressionParser parser = new SpelExpressionParser();
 
     private static final DefaultParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
 
-    private BeanFactory beanFactory;
+    private ApplicationContext applicationContext;
 
     @Autowired
     private RedissonClient redissonClient;
@@ -91,13 +91,13 @@ public class DistributedLockAspect implements BeanFactoryAware {
         StandardEvaluationContext context = new MethodBasedEvaluationContext(TypedValue.NULL, method,
                 joinPoint.getArgs(), nameDiscoverer);
         // it only parses method params '#param-name', No need to parse been '@been-name'
-        // context.setBeanResolver(new BeanFactoryResolver(beanFactory));
+        // context.setBeanResolver(new BeanFactoryResolver(applicationContext));
         Object value = expression.getValue(context);
         return Objects.toString(value, "");
     }
 
     @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }
