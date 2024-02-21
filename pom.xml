@@ -41,7 +41,7 @@
 
         <druid.version>1.2.11</druid.version>
         <log4jdbc.version>1.16</log4jdbc.version>
-        <knife4j.version>3.0.3</knife4j.version>
+        <knife4j.version>4.3.0</knife4j.version>
         <fastjson.version>2.0.32</fastjson.version>
         <hutool.version>5.7.22</hutool.version>
         <guava.version>31.1-jre</guava.version>
@@ -231,6 +231,7 @@
         <!--<dependency>-->
         <!--<groupId>org.springframework.boot</groupId>-->
         <!--<artifactId>spring-boot-devtools</artifactId>-->
+        <!--<scope>runtime</scope>-->
         <!--</dependency>-->
 
         <!-- spring boot 缓存 -->
@@ -308,29 +309,37 @@
 
         <!-- Swagger UI 相关 -->
         <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring-boot-starter -->
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-spring-boot-starter</artifactId>
-            <version>${knife4j.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.plugin</groupId>
-                    <artifactId>spring-plugin-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.xiaoymin</groupId>-->
+<!--            <artifactId>knife4j-spring-boot-starter</artifactId>-->
+<!--            <version>${knife4j.version}</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.springframework.plugin</groupId>-->
+<!--                    <artifactId>spring-plugin-core</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
 
         <!-- # 解决 SpringFox 与 SpringBoot 2.6.x 不兼容的问题，springboot高版本集成knife4j 3.0.3 报错解决方法-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.plugin</groupId>-->
+<!--            <artifactId>spring-plugin-core</artifactId>-->
+<!--            <version>2.0.0.RELEASE</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.plugin</groupId>-->
+<!--            <artifactId>spring-plugin-metadata</artifactId>-->
+<!--            <version>2.0.0.RELEASE</version>-->
+<!--        </dependency>-->
+
+        <!-- knife4j-openapi3 -->
         <dependency>
-            <groupId>org.springframework.plugin</groupId>
-            <artifactId>spring-plugin-core</artifactId>
-            <version>2.0.0.RELEASE</version>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>
+            <version>${knife4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.plugin</groupId>
-            <artifactId>spring-plugin-metadata</artifactId>
-            <version>2.0.0.RELEASE</version>
-        </dependency>
+
 
         <!-- alibaba fastjson-->
         <dependency>

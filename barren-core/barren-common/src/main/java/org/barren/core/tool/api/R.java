@@ -3,7 +3,9 @@ package org.barren.core.tool.api;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.barren.core.tool.constant.BaseConstant;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
@@ -18,6 +20,8 @@ import java.util.Optional;
  * @author cxs
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(description = "返回信息")
 public class R<T> implements Serializable {
 
