@@ -32,7 +32,7 @@ public class CodeGeneratorDemo {
         String outputDir = projectPath + "/src/test/java";
         String mapperOutputDir = projectPath + "/src/test/resources/mapper/";
 
-        String[] tables = {"sys_user", "sys_role", "sys_menu","sys_user_role", "sys_role_menu"};
+        String[] tables = {"sys_user"};
         String packageName = "org.barren.modules";
         String moduleName = "system";
 
@@ -41,7 +41,7 @@ public class CodeGeneratorDemo {
         String webPath = projectPath + "/src/test/resources/ui/" + moduleName;
         // 配置xml，other文件的输出路径
         Map<OutputFile, String> pathInfo = new HashMap<>(4);
-        pathInfo.put(OutputFile.mapperXml, mapperOutputDir);
+        pathInfo.put(OutputFile.xml, mapperOutputDir);
         pathInfo.put(OutputFile.other, webPath);
         // 配置前端文件：api.js, index.vue
         Map<String, String> customFile = new HashMap<>(4);
@@ -78,7 +78,7 @@ public class CodeGeneratorDemo {
                 })
                 .templateEngine(new EnhanceFreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                 .templateConfig(builder ->
-                        builder.controller("template/generator/controller.java")) // 自定义模板
+                        builder.controller("template/generator/rest-controller.java")) // 自定义模板
                 // 自定义其他配置模板文件
                 .injectionConfig(builder -> {
                     builder.

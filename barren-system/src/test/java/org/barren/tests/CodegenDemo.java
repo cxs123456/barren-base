@@ -39,7 +39,7 @@ public class CodegenDemo {
                 .packageConfig(builder -> {
                     builder.parent(packageName) // 设置父包名
                             .moduleName(moduleName) // 设置父包模块名
-                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, mapperOutputDir)); // 设置mapperXml生成路径
+                            .pathInfo(Collections.singletonMap(OutputFile.xml, mapperOutputDir)); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
                     builder.addInclude(tables) // 设置需要生成的表名

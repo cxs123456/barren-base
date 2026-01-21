@@ -2,11 +2,13 @@ package org.barren.tests;
 
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.barren.modules.system.entity.SysUser;
 import org.junit.jupiter.api.Test;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Stream;
@@ -80,20 +82,24 @@ public class Demo {
 
     }
 
-    public static void main(String[] args) throws UnknownHostException {
-        // HttpStatus.
-        // CompletableFuture<Void> voidCompletableFuture = CompletableFuture.runAsync(() -> {
-        //
-        //
-        //     CompletableFuture.allOf(null).thenRun(null);
-        // }, Executors.newFixedThreadPool(5));
-        // FutureTask<?> task = new FutureTask<>(()->{
-        //     TimeUnit.SECONDS.sleep(1);
-        //     return "123";
-        // });
-        // CompletableFuture.
-        System.out.println(InetAddress.getLocalHost().getHostName());
+    public static void main(String[] args)  {
 
+        String name = Demo.class.getName();
+        String simpleName = Demo.class.getSimpleName();
+        String typeName = Demo.class.getTypeName();
+        System.out.println(name);
+        System.out.println(simpleName);
+        System.out.println(typeName);
+
+        // int i = minMoves(new int[]{1, 2, 3});
+        // System.out.println(i);
+    }
+
+
+    public static int minMoves(int[] nums) {
+        int min = Arrays.stream(nums).min().getAsInt();
+        int sum = Arrays.stream(nums).sum();
+        return sum - min * nums.length ;
     }
 
 
