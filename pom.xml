@@ -28,6 +28,7 @@
         <revision>1.0.0-SNAPSHOT</revision>
 
         <java.version>1.8</java.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -472,19 +473,19 @@
                     </executions>
                 </plugin>
             </plugins>
+
+
         </pluginManagement>
 
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <!--<version>2.6.8</version>-->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version> <!-- 或使用最新版本 -->
                 <configuration>
-                    <fork>true</fork>
-                    <!--开启分层编译支持，默认是开启的-->
-                    <layers>
-                        <enabled>true</enabled>
-                    </layers>
+                    <encoding>UTF-8</encoding>
+                    <source>1.8</source> <!-- 根据项目调整 -->
+                    <target>1.8</target> <!-- 根据项目调整 -->
                 </configuration>
             </plugin>
 
